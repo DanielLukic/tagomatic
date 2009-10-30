@@ -29,8 +29,20 @@ options.verbose = false
 TAGS = %w(album,artist,genre,tracknum,title,year)
 
 KNOWN_FORMATS = [
-        "%g/%a/%a_%b_%y/%n_%t.mp3",
+        "%g/VA/%i_-_%b-%y%i/%n_%a_-_%t.mp3",
+        "%g/%a/%a.%b[P]%y(%i)/%n-%i-%i-%i- %t.mp3",
+        "%g/%a/%a - %b [%i]/%n%t [%i].mp3",
+        "%g/%a/%b/%a - %n - %t.mp3",
+        "%g/%a/%b/%n - %i - %t.mp3",
         "%g/%a/%b/%n - %t.mp3",
+        "%g/%a/%b/%n-%t.mp3",
+        "%g/%a/%b/%n_%t.mp3",
+        "%g/%a/%b/%n %t.mp3",
+        "%g/%a/%b/%i %n - %i - %t.mp3",
+        "%g/%a/%a- %b/%n %t.mp3",
+        "%g/%a/%a_%b_%y/%n_%t.mp3",
+        "%g/%a/%a-%b-%y-%i/%n-%i-%t.mp3",
+        "%g/%a/%a-%b-%y-%i/%n-%t.mp3",
         "%g/%a/%b/%a - %t.mp3",
         "%g/%a/(%y) %b/%n - %t.mp3",
         "%g/%a/%y %b/%n - %t.mp3",
@@ -42,14 +54,16 @@ KNOWN_FORMATS = [
 FORMAT_ID_ARTIST = 'a'
 FORMAT_ID_ALBUM = 'b'
 FORMAT_ID_GENRE = 'g'
+FORMAT_ID_IGNORE = 'i'
 FORMAT_ID_TITLE = 't'
 FORMAT_ID_TRACKNUM = 'n'
 FORMAT_ID_YEAR = 'y'
 
-FORMAT_REGEXP_ARTIST = '(.+)'
-FORMAT_REGEXP_ALBUM = '(.+)'
-FORMAT_REGEXP_GENRE = '(.+)'
-FORMAT_REGEXP_TITLE = '(.+)'
+FORMAT_REGEXP_ARTIST = '([^\/]+)'
+FORMAT_REGEXP_ALBUM = '([^\/]+)'
+FORMAT_REGEXP_GENRE = '([^\/]+)'
+FORMAT_REGEXP_IGNORE = '([^\/]+)'
+FORMAT_REGEXP_TITLE = '([^\/]+)'
 FORMAT_REGEXP_TRACKNUM = '([0-9]+)'
 FORMAT_REGEXP_YEAR = '([0-9]+)'
 
@@ -66,7 +80,14 @@ class FormatMatcher
     return nil unless matchdata.captures.size == @mapping.size
     tags = {}
     0.upto(@mapping.size) do |index|
-      tags[@mapping[index]] = matchdata.captures[index]
+      value = matchdata.captures[index]
+      if value
+        value = value.gsub '_', ' '
+        parts = value.split ' '
+        capitalized = parts.map {|p| p.capitalize}
+        value = capitalized.join ' '
+      end
+      tags[@mapping[index]] = value
     end
     tags
   end
@@ -88,6 +109,7 @@ def compile_format(format)
     regexp << FORMAT_REGEXP_ALBUM if tag == FORMAT_ID_ALBUM
     regexp << FORMAT_REGEXP_ARTIST if tag == FORMAT_ID_ARTIST
     regexp << FORMAT_REGEXP_GENRE if tag == FORMAT_ID_GENRE
+    regexp << FORMAT_REGEXP_IGNORE if tag == FORMAT_ID_IGNORE
     regexp << FORMAT_REGEXP_TITLE if tag == FORMAT_ID_TITLE
     regexp << FORMAT_REGEXP_TRACKNUM if tag == FORMAT_ID_TRACKNUM
     regexp << FORMAT_REGEXP_YEAR if tag == FORMAT_ID_YEAR
@@ -179,29 +201,23 @@ def do_tagging_on(file)
     puts '=' * ( file.size + 8)
   end
 
-  if @options.genre
-    genres = Mp3Info::GENRES.select {|g| g.downcase == @options.genre.downcase }
-    @genre_v1 = genres.size > 0 ? genres[0] : nil
-  end
-
   if @options.guess
     matched_tags = guess_tags_for file
 
     if matched_tags
       Mp3Info.open(file) do |info|
         matched_tags.each do |tag, value|
+          next unless tag and value
+          next if tag == FORMAT_ID_IGNORE
+
           info.tag.album = value if tag == FORMAT_ID_ALBUM
           info.tag.artist = value if tag == FORMAT_ID_ARTIST
           info.tag.title = value if tag == FORMAT_ID_TITLE
-          info.tag.tracknum = value if tag == FORMAT_ID_TRACKNUM
+          info.tag.tracknum = value.to_i if tag == FORMAT_ID_TRACKNUM
           info.tag.year = value if tag == FORMAT_ID_YEAR
-          info.tag.album = value if tag == FORMAT_ID_ALBUM
 
           if tag == FORMAT_ID_GENRE
-            genres = Mp3Info::GENRES.select {|g| g.downcase == value.downcase }
-            genre_v1 = genres.size > 0 ? genres[0] : nil
-
-            info.tag1.genre = genre_v1
+            info.tag1.genre = nil
             info.tag2.TCON = value
           end
         end
@@ -219,7 +235,7 @@ def do_tagging_on(file)
     info.tag.tracknum = @options.tracknum if @options.tracknum
     info.tag.year = @options.year if @options.year
 
-    info.tag1.genre = @genre_v1 if @options.genre
+    info.tag1.genre = nil if @options.genre
     info.tag2.TCON = @options.genre if @options.genre
   end
 
@@ -238,9 +254,9 @@ def do_tagging_on(file)
       output << '/'
       output << ( info.tag1.album || '<album>' )
       output << '/'
-      output << ( "#{info.tag1.year}" || '<year>' )
+      output << ( info.tag1.year ? "#{info.tag1.year}" : '<year>' )
       output << '/'
-      output << ( "#{info.tag1.tracknum}" || '<tracknum>' )
+      output << ( info.tag1.tracknum ? "#{info.tag1.tracknum}" : '<tracknum>' )
       output << '-'
       output << ( info.tag1.title || '<title>' )
       puts output
@@ -255,9 +271,9 @@ def do_tagging_on(file)
       output << '/'
       output << ( info.tag2.TALB || '<album>' )
       output << '/'
-      output << ( "#{info.tag2.TYER}" || '<year>' )
+      output << ( info.tag2.TYER ? "#{info.tag2.TYER}" : '<year>' )
       output << '/'
-      output << ( "#{info.tag2.TRCK}" || '<tracknum>' )
+      output << ( info.tag2.TRCK ? "#{info.tag2.TRCK}" : '<tracknum>' )
       output << '-'
       output << ( info.tag2.TIT2 || '<title>' )
       puts output
@@ -276,7 +292,7 @@ end
 def process(path_prefix, file_or_folder)
   file_path = File.join path_prefix, file_or_folder
   puts "processing #{file_path}" if @options.verbose
-  if File.file? file_path
+  if File.file? file_path and File.extname(file_path).downcase == '.mp3'
     do_tagging_on file_path
   elsif File.directory? file_path
     scan file_path if @options.recurse
