@@ -1,0 +1,58 @@
+module Tagomatic
+
+  class InfoUpdater
+
+    def initialize(mp3info)
+      @info = mp3info
+      @updates = {}
+    end
+
+    def apply
+      @updates.each { |tag, value| write tag, value }
+    end
+
+    def dirty?
+      @dirty
+    end
+
+    def album=(value)
+      update :album, value
+    end
+
+    def artist=(value)
+      update :artist, value
+    end
+
+    def title=(value)
+      update :title, value
+    end
+
+    def tracknum=(value)
+      update :tracknum, value
+    end
+
+    def year=(value)
+      update :year, value
+    end
+
+    protected
+
+    def update(tag, value)
+      current_value = read(tag).to_s
+      if current_value != value.to_s
+        @updates[tag] = value
+        @dirty = true
+      end
+    end
+
+    def read(tag)
+      @info.tag.send tag
+    end
+
+    def write(tag, value)
+      @info.tag.send "#{tag}=".to_sym, value
+    end
+
+  end
+
+end
