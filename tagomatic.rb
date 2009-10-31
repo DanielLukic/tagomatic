@@ -12,6 +12,7 @@ options.files = []
 
 options.album = nil
 options.artist = nil
+options.discnum = nil
 options.genre = nil
 options.title = nil
 options.tracknum = nil
@@ -19,6 +20,7 @@ options.year = nil
 
 options.formats = []
 
+options.errorstops = false
 options.guess = false
 options.list = false
 options.recurse = false
@@ -53,6 +55,7 @@ KNOWN_FORMATS = [
 
 FORMAT_ID_ARTIST = 'a'
 FORMAT_ID_ALBUM = 'b'
+FORMAT_ID_DISC = 'd'
 FORMAT_ID_GENRE = 'g'
 FORMAT_ID_IGNORE = 'i'
 FORMAT_ID_TITLE = 't'
@@ -61,11 +64,14 @@ FORMAT_ID_YEAR = 'y'
 
 FORMAT_REGEXP_ARTIST = '([^\/]+)'
 FORMAT_REGEXP_ALBUM = '([^\/]+)'
+FORMAT_REGEXP_DISC = '([0-9]+)'
 FORMAT_REGEXP_GENRE = '([^\/]+)'
 FORMAT_REGEXP_IGNORE = '([^\/]+)'
 FORMAT_REGEXP_TITLE = '([^\/]+)'
 FORMAT_REGEXP_TRACKNUM = '([0-9]+)'
 FORMAT_REGEXP_YEAR = '([0-9]+)'
+
+LOCAL_CONFIG_FILE_NAME = '.tagomatic'
 
 class FormatMatcher
   def initialize(compiled_regexp, tag_mapping, original_format)
@@ -108,6 +114,7 @@ def compile_format(format)
     tag_mapping << tag
     regexp << FORMAT_REGEXP_ALBUM if tag == FORMAT_ID_ALBUM
     regexp << FORMAT_REGEXP_ARTIST if tag == FORMAT_ID_ARTIST
+    regexp << FORMAT_REGEXP_DISC if tag == FORMAT_ID_DISC
     regexp << FORMAT_REGEXP_GENRE if tag == FORMAT_ID_GENRE
     regexp << FORMAT_REGEXP_IGNORE if tag == FORMAT_ID_IGNORE
     regexp << FORMAT_REGEXP_TITLE if tag == FORMAT_ID_TITLE
@@ -134,6 +141,9 @@ parser = OptionParser.new do |opts|
   opts.on("-a", "--artist [ARTIST]", "Set this artist name.") do |artist|
     options.artist = artist
   end
+  opts.on("-d", "--discnum [DISCNUM]", "Disc number of a disc set. Will be appended to album.") do |discnum|
+    options.discnum = discnum
+  end
   opts.on("-g", "--genre [GENRE]", "Set this genre.") do |genre|
     options.genre = genre
   end
@@ -147,37 +157,42 @@ parser = OptionParser.new do |opts|
     options.year = year
   end
 
-  opts.on("-f", "--format [FORMAT]", "Try applying this format string to determine tags. Multiple occurrences allowed.") do |format|
-    options.formats << format
+  opts.on("-f", "--format [FORMAT]", "Try applying this format string to determine tags. Multiple occurrences allowed. Last one is used first!") do |format|
+    options.formats << compile_format(format)
   end
 
-  opts.on("-s", "--[no-]guess", "Use format guessing. Can be combined with --format.") do |guess|
+  opts.on("-e", "--errorstops", "Stop execution if an error occurs.") do |errorstops|
+    options.errorstops = errorstops
+  end
+  opts.on("-s", "--guess", "Use format guessing. Can be combined with --format.") do |guess|
     options.guess = guess
   end
-  opts.on("-l", "--[no-]list", "List available formats for guessing.") do |list|
+  opts.on("-l", "--list", "List available formats for guessing.") do |list|
     options.list = list
   end
-  opts.on("-r", "--[no-]recurse", "Scan for files recursively.") do |recurse|
+  opts.on("-r", "--recurse", "Scan for files recursively.") do |recurse|
     options.recurse = recurse
   end
-  opts.on("-1", "--[no-]showv1", "Show the v1 tag values.") do |showv1|
+  opts.on("-1", "--showv1", "Show the v1 tag values.") do |showv1|
     options.showv1 = showv1
   end
-  opts.on("-2", "--[no-]showv2", "Show the v2 tag values.") do |showv2|
+  opts.on("-2", "--showv2", "Show the v2 tag values.") do |showv2|
     options.showv2 = showv2
-  end
-  opts.on("-v", "--[no-]verbose", "Run verbosely.") do |verbose|
-    options.verbose = verbose
   end
 
   opts.separator ""
   opts.separator "Common options:"
 
+  opts.on("-v", "--verbose", "Run verbosely.") do |verbose|
+    options.verbose = verbose
+  end
   opts.on_tail("-h", "--help", "Show this message") do
     puts opts
     exit
   end
 end
+
+@parser = parser
 
 parser.parse! ARGV
 
@@ -187,12 +202,89 @@ files = ARGV
 
 puts KNOWN_FORMATS if @options.list
 
-def guess_tags_for(file)
-  KNOWN_FORMATS_COMPILED.each do |format|
+def guess_tags_for(file, formats)
+  formats.each do |format|
     matched_tags = format.match file
     return matched_tags unless matched_tags.nil? or matched_tags.empty?
   end
   nil
+end
+
+class InfoUpdater
+  def initialize(mp3info)
+    @info = mp3info
+    @updates = {}
+  end
+  def apply
+    @updates.each { |tag, value| write tag, value }
+  end
+  def dirty?
+    @dirty
+  end
+  def album=(value)
+    update :album, value
+  end
+  def artist=(value)
+    update :artist, value
+  end
+  def title=(value)
+    update :title, value
+  end
+  def tracknum=(value)
+    update :tracknum, value
+  end
+  def year=(value)
+    update :year, value
+  end
+  protected
+  def update(tag, value)
+    current_value = read(tag).to_s
+    if current_value != value.to_s
+      @updates[tag] = value
+      @dirty = true
+    end
+  end
+  def read(tag)
+    @info.tag.send tag
+  end
+  def write(tag, value)
+    @info.tag.send "#{tag}=".to_sym, value
+  end
+end
+
+def apply_tags(file, tags_hash)
+  Mp3Info.open(file) do |info|
+    updater = InfoUpdater.new info
+
+    discnum = tags_hash[FORMAT_ID_DISC]
+    discnum_suffix = discnum ? " CD#{discnum}" : ''
+
+    tags_hash.each do |tag, value|
+      next unless tag and value
+      next if tag == FORMAT_ID_IGNORE
+
+      updater.album = value + discnum_suffix if tag == FORMAT_ID_ALBUM
+      updater.artist = value if tag == FORMAT_ID_ARTIST
+      updater.title = value if tag == FORMAT_ID_TITLE
+      updater.tracknum = value.to_i if tag == FORMAT_ID_TRACKNUM
+      updater.year = value if tag == FORMAT_ID_YEAR
+    end
+
+    updater.apply if updater.dirty?
+
+    genre = tags_hash[FORMAT_ID_GENRE]
+    if genre and info.tag2.TCON.to_s != genre.to_s
+      #info.tag.genre = genre DOES NOT WORK!
+      info.flush # this is required when using tag1/tag2 now after using the generic 'tag' above
+      info.tag1.genre = nil # we cannot set arbitrary values here. so we simply clear it.
+      info.tag2.TCON = genre
+    end
+  end
+end
+
+def show_error(message)
+  puts "ERROR: #{message}"
+  exit 10 if @options.errorstops
 end
 
 def do_tagging_on(file)
@@ -201,30 +293,19 @@ def do_tagging_on(file)
     puts '=' * ( file.size + 8)
   end
 
-  if @options.guess
-    matched_tags = guess_tags_for file
+  guess_if_allowed = true
 
-    if matched_tags
-      Mp3Info.open(file) do |info|
-        matched_tags.each do |tag, value|
-          next unless tag and value
-          next if tag == FORMAT_ID_IGNORE
+  unless @options.formats.empty?
+    matched_tags = guess_tags_for file, @options.formats
+    apply_tags file, matched_tags if matched_tags
+    guess_if_allowed = false if matched_tags
+    show_error "no custom format matched #{file}" unless matched_tags
+  end
 
-          info.tag.album = value if tag == FORMAT_ID_ALBUM
-          info.tag.artist = value if tag == FORMAT_ID_ARTIST
-          info.tag.title = value if tag == FORMAT_ID_TITLE
-          info.tag.tracknum = value.to_i if tag == FORMAT_ID_TRACKNUM
-          info.tag.year = value if tag == FORMAT_ID_YEAR
-
-          if tag == FORMAT_ID_GENRE
-            info.tag1.genre = nil
-            info.tag2.TCON = value
-          end
-        end
-      end
-    else
-      puts "ERROR: failed guessing format for #{file}"
-    end
+  if guess_if_allowed and @options.guess
+    matched_tags = guess_tags_for file, KNOWN_FORMATS_COMPILED
+    apply_tags file, matched_tags if matched_tags
+    show_error "no format guess matched #{file}" unless matched_tags
   end
 
   Mp3Info.open(file) do |info|
@@ -247,46 +328,117 @@ def do_tagging_on(file)
 
   if @options.showv1
     Mp3Info.open(file) do |info|
-      output = ''
+      output = 'g='
       output << ( info.tag1.genre || '<genre>' )
-      output << '/'
+      output << '/a='
       output << ( info.tag1.artist || '<artist>' )
-      output << '/'
+      output << '/b='
       output << ( info.tag1.album || '<album>' )
-      output << '/'
+      output << '/y='
       output << ( info.tag1.year ? "#{info.tag1.year}" : '<year>' )
-      output << '/'
+      output << '/n='
       output << ( info.tag1.tracknum ? "#{info.tag1.tracknum}" : '<tracknum>' )
-      output << '-'
+      output << '/t='
       output << ( info.tag1.title || '<title>' )
       puts output
     end
   end
   if @options.showv2
     Mp3Info.open(file) do |info|
-      output = ''
+      output = 'g='
       output << ( info.tag2.TCON || '<genre>' )
-      output << '/'
+      output << '/a='
       output << ( info.tag2.TPE1 || '<artist>' )
-      output << '/'
+      output << '/b='
       output << ( info.tag2.TALB || '<album>' )
-      output << '/'
+      output << '/y='
       output << ( info.tag2.TYER ? "#{info.tag2.TYER}" : '<year>' )
-      output << '/'
+      output << '/n='
       output << ( info.tag2.TRCK ? "#{info.tag2.TRCK}" : '<tracknum>' )
-      output << '-'
+      output << '/t='
       output << ( info.tag2.TIT2 || '<title>' )
       puts output
     end
   end
 end
 
-def scan(folder_path)
-  entries = Dir.entries folder_path
-  entries.each do |entry|
-    next if entry == '.' || entry == '..'
-    process folder_path, entry
+class String
+  def starts_with?(prefix)
+    pattern = Regexp.new "^#{Regexp.escape(prefix)}"
+    pattern =~ self
   end
+end
+
+def scan_folder
+  folder = @current_folder
+  puts "scanning #{folder}" if @options.verbose
+  entries = Dir.entries folder
+  entries.each do |entry|
+    next if entry == '.' or entry == '..' or entry.starts_with?('.format=')
+    process folder, entry
+  end
+end
+
+@options_stack = []
+
+def save_current_options
+  @options_stack << @options.dup
+end
+
+def determine_local_config_file_path
+  File.join(@current_folder, LOCAL_CONFIG_FILE_NAME)
+end
+
+def has_local_config?
+  File.exist? determine_local_config_file_path
+end
+
+def read_local_options
+  argv = []
+  lines = File.readlines determine_local_config_file_path
+  lines.each do |line|
+    matchdata = /(-{1,2}[^ ]+)( (.+))?/.match line
+    next if matchdata.captures.size == 0
+    argv << matchdata.captures[0]
+    argv << matchdata.captures[2] if matchdata.captures.size == 3
+  end
+  @parser.parse! argv
+end
+
+def determine_local_formats_glob_pattern()
+  "#{@current_folder}/.format=*"
+end
+
+def list_local_formats
+  Dir.glob determine_local_formats_glob_pattern
+end
+
+def has_local_format?
+  not list_local_formats.empty?
+end
+
+def read_local_format
+  list_local_formats.each do |format_file_path|
+    base_name = File.basename format_file_path
+    format = base_name.sub '.format=', ''
+    format.gsub! '|', '/'
+    @options.formats << compile_format(format)
+  end
+end
+
+def pop_local_options
+  @options = @options_stack.pop
+end
+
+@current_folder = nil
+
+def scan(folder_path)
+  @current_folder = folder_path
+  save_current_options
+  read_local_options if has_local_config?
+  read_local_format if has_local_format?
+  scan_folder
+  pop_local_options
 end
 
 def process(path_prefix, file_or_folder)
