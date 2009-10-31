@@ -1,6 +1,24 @@
 = tagomatic
 
-Description goes here.
+Simple command-line mp3 tagger based on mp3info gem. Supports folder-specific configuration files.
+
+Another mp3 tagger the world does not need.
+
+But I needed it. I have a large collection of old mp3 files. From times when tagging was mostly
+based on the file and folder names. When v2 tags where nowhere close..
+
+Modes of operation:
+
+* The tagger will try to guess the tags from the full file path by applying a set of known formats.
+* The tagger will apply specific tags given on the command-line.
+* The tagger will match specific formats given on the command-line.
+* Arbitraty combination of the before-mentioned modes.
+
+The scanner supports recursive folder handling. Of course.
+
+Right now v2 tags are the focus.
+
+It is probably best to call this alpha ware.
 
 == Note on Patches/Pull Requests
  
