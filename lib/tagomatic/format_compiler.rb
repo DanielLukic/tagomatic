@@ -11,8 +11,8 @@ module Tagomatic
     FORMAT_REGEXP_TRACKNUM = '([0-9]+)'
     FORMAT_REGEXP_YEAR = '([0-9]+)'
 
-    def initialize(factory)
-      @factory = factory
+    def initialize(format_matcher_factory)
+      @format_matcher_factory = format_matcher_factory
     end
 
     def compile_format(format)
@@ -36,7 +36,7 @@ module Tagomatic
       end
 
       compiled = Regexp.compile(regexp)
-      @factory.create_format_matcher(compiled, tag_mapping, format)
+      @format_matcher_factory.create_format_matcher(compiled, tag_mapping, format)
     end
 
   end
