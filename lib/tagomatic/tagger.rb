@@ -37,10 +37,11 @@ module Tagomatic
             "%a - %b/%n - %t.mp3",
     ]
 
-    def initialize(options, compiler, mp3info, logger)
+    def initialize(options, compiler, mp3info, info_updater_factory, logger)
       @options = options
       @compiler = compiler
       @mp3info = mp3info
+      @info_updater_factory = info_updater_factory
       @logger = logger
     end
 
@@ -131,7 +132,7 @@ module Tagomatic
 
     def apply_tags(file, tags_hash)
       @mp3info.open(file) do |info|
-        updater = InfoUpdater.new info
+        updater = @info_updater_factory.create_info_updater(info)
 
         discnum = tags_hash[FORMAT_ID_DISC]
         discnum_suffix = discnum ? " CD#{discnum}" : ''

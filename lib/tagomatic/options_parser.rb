@@ -11,7 +11,11 @@ module Tagomatic
 
     def parse!(arguments)
       @parser.parse!(arguments)
-      @options[:files].concat arguments
+      @options[:files].concat(arguments)
+    end
+
+    def show_help
+      @parser.to_s
     end
 
     protected
