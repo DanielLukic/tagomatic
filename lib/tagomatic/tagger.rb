@@ -29,6 +29,7 @@ module Tagomatic
             "%g/%a/(%y)%b/%n-%t.mp3",
             "%g/%a/(%y)%b/%n%t.mp3",
 
+            "%g/%a/%b/%a-%b-%n-%t.mp3",
             "%g/%a/%b/%n-%t.mp3",
             "%g/%a/%b/%n%t.mp3",
 
