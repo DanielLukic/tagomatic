@@ -8,7 +8,12 @@ module Tagomatic
 
     def error(message, optional_exception = nil)
       puts "ERROR: #{message}"
-      $stderr.puts optional_exception.backtrace if optional_exception
+      exception optional_exception if optional_exception
+    end
+
+    def exception(exception)
+      $stderr.puts exception.to_s
+      $stderr.puts exception.backtrace
     end
 
     def verbose(message)
