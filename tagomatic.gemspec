@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{tagomatic}
-  s.version = "0.0.0"
+  s.version = "0.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Daniel Lukic"]
-  s.date = %q{2009-11-01}
+  s.date = %q{2009-11-02}
   s.default_executable = %q{tagomatic}
   s.description = %q{= tagomatic
 
@@ -79,6 +79,7 @@ Copyright (c) 2009 Daniel Lukic. See LICENSE for details.
      "lib/tagomatic/scanner.rb",
      "lib/tagomatic/system_configuration.rb",
      "lib/tagomatic/tagger.rb",
+     "tagomatic.gemspec",
      "test/data/sorted/80s/Peter_Schilling/Fast_alles_konstruiert/01-Fast_alles_konstruiert.mp3",
      "test/data/sorted/80s/Peter_Schilling/Fast_alles_konstruiert/02-Dann_truegt_der_schein.mp3",
      "test/helper.rb",
@@ -99,11 +100,14 @@ Copyright (c) 2009 Daniel Lukic. See LICENSE for details.
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<ruby-mp3info>, [">= 0"])
       s.add_development_dependency(%q<thoughtbot-shoulda>, [">= 0"])
     else
+      s.add_dependency(%q<ruby-mp3info>, [">= 0"])
       s.add_dependency(%q<thoughtbot-shoulda>, [">= 0"])
     end
   else
+    s.add_dependency(%q<ruby-mp3info>, [">= 0"])
     s.add_dependency(%q<thoughtbot-shoulda>, [">= 0"])
   end
 end

@@ -10,6 +10,7 @@ begin
     gem.email = "daniel.lukic@berlinfactor.com"
     gem.homepage = "http://github.com/DanielLukic/tagomatic"
     gem.authors = ["Daniel Lukic"]
+    gem.add_dependency "ruby-mp3info", ">= 0"
     gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
