@@ -72,11 +72,14 @@ module Tagomatic
     end
 
     def replace_underscores
-      clean = @file_path.gsub('_', ' ')
-      return if clean == @file_path
-      @logger.verbose "renaming #{@file_path} to #{clean}"
-      FileUtils.mv @file_path, clean
-      @file_path = clean
+      folder_path = File.dirname(@file_path)
+      file_name = File.basename(@file_path)
+      clean = file_name.gsub('_', ' ')
+      return if clean == file_name
+      @logger.verbose "renaming #{file_name} to #{clean}"
+      FileUtils.cd folder_path
+      FileUtils.mv file_name, clean
+      @file_path = File.join(folder_path, clean)
     end
 
     def apply_formats
