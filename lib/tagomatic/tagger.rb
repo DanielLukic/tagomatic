@@ -70,11 +70,11 @@ module Tagomatic
 
     def apply_custom_formats
       @tags = guess_tags_using(@options[:formats])
-      show_error("no custom format matched #{@file_path}") unless @tags
+      show_error("no custom format matched #{@file_path} using #{@options[:formats]}") unless @tags
     end
 
     def show_error(message, optional_exception = nil)
-      @logger.error("failed updating #{@file_path}", optional_exception)
+      @logger.error(message, optional_exception)
       exit 10 if @options[:errorstops]
     end
 
@@ -118,7 +118,7 @@ module Tagomatic
     def try_updating_mp3file
       update_mp3file
     rescue
-      show_error "failed updating #{@file_path}", $1
+      show_error "failed updating #{@file_path}", $!
     end
 
     def update_mp3file
