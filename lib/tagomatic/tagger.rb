@@ -14,25 +14,24 @@ module Tagomatic
     FORMAT_ID_YEAR = 'y'
 
     KNOWN_FORMATS = [
-            "%g/%a/%y %b/%n_-_%t.mp3",
-            "%g/%a/%y %b/%n_%t.mp3",
-            "%g/%a/%y %b/%n-%t.mp3",
-            "%g/%a/%b [%y]/%n-%t.mp3",
-
-            "%g/%a/%a_%b_%y/%n_%t.mp3",
             "%g/%a/%b [%y]/%n - %t.mp3",
-            "%g/%a/%b/%a - %n - %t.mp3",
-            "%g/%a/%b/%n - %t.mp3",
-            "%g/%a/%b/%n-%t.mp3",
-            "%g/%a/%b/%n_%t.mp3",
-            "%g/%a/%b/%n %t.mp3",
-            "%g/%a/%a- %b/%n %t.mp3",
-            "%g/%a/%b/%a - %t.mp3",
+            "%g/%a/%b [%y]/%n-%t.mp3",
+            "%g/%a/%b [%y]/%n %t.mp3",
+
+            "%g/%a/%b (%y)/%n - %t.mp3",
+            "%g/%a/%b (%y)/%n-%t.mp3",
+            "%g/%a/%b (%y)/%n %t.mp3",
+
             "%g/%a/(%y) %b/%n - %t.mp3",
-            "%g/%a/%y %b/%n - %t.mp3",
-            "%a/%b/%n - %t.mp3",
-            "%a - %y - %b/%n - %t.mp3",
-            "%a - %b/%n - %t.mp3",
+            "%g/%a/(%y) %b/%n %t.mp3",
+            "%g/%a/(%y) %b/%n-%t.mp3",
+
+            "%g/%a/%b/%n - %t.mp3",
+            "%g/%a/%b/%n %t.mp3",
+            "%g/%a/%b/%n-%t.mp3",
+
+            "%a - %n - %t.mp3",
+            "%n - %a - %t.mp3",
     ]
 
     def initialize(options, compiler, mp3info, info_updater_factory, logger)
