@@ -40,7 +40,9 @@ module Tagomatic
     end
 
     def save_current_options
-      @options_stack << @options.dup
+      cloned = @options.clone
+      cloned[:formats] = @options[:formats].clone
+      @options_stack << cloned
     end
 
     def has_local_options?
@@ -89,7 +91,7 @@ module Tagomatic
     end
 
     def pop_local_options
-      @options = @options_stack.pop
+      @options.replace(@options_stack.pop)
     end
 
     LOCAL_CONFIG_FILE_NAME = '.tagomatic'
