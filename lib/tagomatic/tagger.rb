@@ -127,7 +127,12 @@ module Tagomatic
     def update_mp3file
       open_mp3file
       apply_tags
-
+      close_mp3file
+      # for some reasing mp3info will not write values if you read them before writing.
+      # therefore the file has to be closed first, then reopened. note: the mp3info
+      # reload method seems to be broken, too. obviously there is a good chance i simply
+      # do not understand the mp3info api..
+      open_mp3file
       show_mp3info if @options[:verbose]
       show_v1tags if @options[:showv1]
       show_v2tags if @options[:showv2]
