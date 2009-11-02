@@ -8,11 +8,15 @@ module Tagomatic
     end
 
     def apply
-      @updates.each { |tag, value| write tag, value }
+      @updates.each { |tag, value| write(tag, value) }
     end
 
     def dirty?
-      @dirty
+      @updates.each do |tag, value|
+        current_value = read(tag).to_s
+        return true if current_value != value.to_s
+      end
+      false
     end
 
     def album=(value)
@@ -21,6 +25,10 @@ module Tagomatic
 
     def artist=(value)
       update :artist, value
+    end
+
+    def genre_s=(value)
+      update :genre_s, value
     end
 
     def title=(value)
@@ -38,15 +46,11 @@ module Tagomatic
     protected
 
     def update(tag, value)
-      current_value = read(tag).to_s
-      if current_value != value.to_s
-        @updates[tag] = value
-        @dirty = true
-      end
+      @updates[tag] = value
     end
 
     def read(tag)
-      @info.tag.send tag
+      @info.tag2.send(tag)
     end
 
     def write(tag, value)
