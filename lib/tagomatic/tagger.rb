@@ -2,57 +2,15 @@ require 'fileutils'
 
 require 'monkey/id3v2'
 require 'tagomatic/info_updater'
+require 'tagomatic/known_formats'
+require 'tagomatic/tags'
 
 module Tagomatic
 
   class Tagger
 
-    FORMAT_ID_ARTIST = 'a'
-    FORMAT_ID_ALBUM = 'b'
-    FORMAT_ID_DISC = 'd'
-    FORMAT_ID_GENRE = 'g'
-    FORMAT_ID_IGNORE = 'i'
-    FORMAT_ID_TITLE = 't'
-    FORMAT_ID_TRACKNUM = 'n'
-    FORMAT_ID_YEAR = 'y'
-
-    KNOWN_FORMATS = [
-            "%g/%a/%b/Disc%d/%n-%t.mp3",
-            "%g/%a/%b/Disc%d/%n%t.mp3",
-            "%g/%a/%b/Disc%d/%t.mp3",
-            "%g/%a/%b/CD%d/%n-%t.mp3",
-            "%g/%a/%b/CD%d/%n%t.mp3",
-            "%g/%a/%b/CD%d/%t.mp3",
-            "%g/%a/%b/cd%d/%n-%t.mp3",
-            "%g/%a/%b/cd%d/%n%t.mp3",
-            "%g/%a/%b/cd%d/%t.mp3",
-
-            "%g/%a/%b[%y]/%a-%b-%n-%t.mp3",
-            "%g/%a/%b[%y]/%n-%t.mp3",
-            "%g/%a/%b[%y]/%n%t.mp3",
-
-            "%g/%a/%b(%y)/%a-%b-%n-%t.mp3",
-            "%g/%a/%b(%y)/%n-%t.mp3",
-            "%g/%a/%b(%y)/%n%t.mp3",
-
-            "%g/%a/(%y)%b/%a-%b-%n-%t.mp3",
-            "%g/%a/(%y)%b/%n-%t.mp3",
-            "%g/%a/(%y)%b/%n%t.mp3",
-
-            "%g/%a/%y - %b/%a-%b-%n-%t.mp3",
-            "%g/%a/%y - %b/%n-%t.mp3",
-            "%g/%a/%y - %b/%n%t.mp3",
-
-            "%g/%a/%b/%a-%b-%n-%t.mp3",
-            "%g/%a/%b/%a-%b-%n-%t.MP3",
-            "%g/%a/%b/%n-%t.mp3",
-            "%g/%a/%b/%n-%t.MP3",
-            "%g/%a/%b/%n%t.mp3",
-            "%g/%a/%b/%n%t.MP3",
-
-            "%g/%a/%b/%t.mp3",
-            "%g/%a/%b/%t.MP3",
-    ]
+    include Tagomatic::Tags
+    include Tagomatic::KnownFormats
 
     def initialize(options, compiler, mp3info, info_updater_factory, logger)
       @options = options

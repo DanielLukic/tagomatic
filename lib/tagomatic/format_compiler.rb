@@ -1,15 +1,10 @@
+require 'tagomatic/tags'
+
 module Tagomatic
 
   class FormatCompiler
 
-    FORMAT_REGEXP_ARTIST = '([^\/]+)'
-    FORMAT_REGEXP_ALBUM = '([^\/]+)'
-    FORMAT_REGEXP_DISC = '\s*([0-9]+)\s*'
-    FORMAT_REGEXP_GENRE = '([^\/]+)'
-    FORMAT_REGEXP_IGNORE = '([^\/]+)'
-    FORMAT_REGEXP_TITLE = '([^\/]+)'
-    FORMAT_REGEXP_TRACKNUM = '\s*([0-9]+)\s*'
-    FORMAT_REGEXP_YEAR = '\s*([0-9]+)\s*'
+    include Tagomatic::Tags
 
     def initialize(format_matcher_factory)
       @format_matcher_factory = format_matcher_factory
@@ -24,14 +19,14 @@ module Tagomatic
         tag = tag_and_tail[0, 1]
         tail = tag_and_tail[1..-1]
         tag_mapping << tag
-        regexp << FORMAT_REGEXP_ALBUM if tag == Tagomatic::Tagger::FORMAT_ID_ALBUM
-        regexp << FORMAT_REGEXP_ARTIST if tag == Tagomatic::Tagger::FORMAT_ID_ARTIST
-        regexp << FORMAT_REGEXP_DISC if tag == Tagomatic::Tagger::FORMAT_ID_DISC
-        regexp << FORMAT_REGEXP_GENRE if tag == Tagomatic::Tagger::FORMAT_ID_GENRE
-        regexp << FORMAT_REGEXP_IGNORE if tag == Tagomatic::Tagger::FORMAT_ID_IGNORE
-        regexp << FORMAT_REGEXP_TITLE if tag == Tagomatic::Tagger::FORMAT_ID_TITLE
-        regexp << FORMAT_REGEXP_TRACKNUM if tag == Tagomatic::Tagger::FORMAT_ID_TRACKNUM
-        regexp << FORMAT_REGEXP_YEAR if tag == Tagomatic::Tagger::FORMAT_ID_YEAR
+        regexp << FORMAT_REGEXP_ALBUM if tag == FORMAT_ID_ALBUM
+        regexp << FORMAT_REGEXP_ARTIST if tag == FORMAT_ID_ARTIST
+        regexp << FORMAT_REGEXP_DISC if tag == FORMAT_ID_DISC
+        regexp << FORMAT_REGEXP_GENRE if tag == FORMAT_ID_GENRE
+        regexp << FORMAT_REGEXP_IGNORE if tag == FORMAT_ID_IGNORE
+        regexp << FORMAT_REGEXP_TITLE if tag == FORMAT_ID_TITLE
+        regexp << FORMAT_REGEXP_TRACKNUM if tag == FORMAT_ID_TRACKNUM
+        regexp << FORMAT_REGEXP_YEAR if tag == FORMAT_ID_YEAR
         regexp << Regexp.escape(tail)
       end
 

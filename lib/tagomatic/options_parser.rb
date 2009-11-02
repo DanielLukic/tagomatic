@@ -88,6 +88,10 @@ module Tagomatic
           puts opts
           exit
         end
+        opts.on_tail("--help-format", "Show help on writing --format strings") do
+          puts File.read(File.join(File.dirname($0), '..', 'lib/tagomatic/tags.rb'))
+          exit
+        end
       end
     end
 
