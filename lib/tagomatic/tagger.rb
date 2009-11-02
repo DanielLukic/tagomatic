@@ -73,8 +73,8 @@ module Tagomatic
       show_error("no custom format matched #{@file_path}") unless @tags
     end
 
-    def show_error(message)
-      puts "ERROR: #{message}"
+    def show_error(message, optional_exception = nil)
+      @logger.error("failed updating #{@file_path}", optional_exception)
       exit 10 if @options[:errorstops]
     end
 
@@ -118,7 +118,7 @@ module Tagomatic
     def try_updating_mp3file
       update_mp3file
     rescue
-      @logger.error("failed updating #{@file_path}", $!)
+      show_error "failed updating #{@file_path}", $1
     end
 
     def update_mp3file
