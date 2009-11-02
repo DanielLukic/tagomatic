@@ -6,6 +6,11 @@ module Tagomatic
       @options = options
     end
 
+    def error(message, e)
+      puts "ERROR: #{message}"
+      $stderr.puts e.backtrace
+    end
+
     def verbose(message)
       puts message if @options[:verbose]
     end
