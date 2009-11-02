@@ -17,6 +17,13 @@ module Tagomatic
     FORMAT_ID_YEAR = 'y'
 
     KNOWN_FORMATS = [
+            "%g/%a/%b/CD%d/%n-%t.mp3",
+            "%g/%a/%b/CD%d/%n%t.mp3",
+            "%g/%a/%b/CD%d/%t.mp3",
+            "%g/%a/%b/cd%d/%n-%t.mp3",
+            "%g/%a/%b/cd%d/%n%t.mp3",
+            "%g/%a/%b/cd%d/%t.mp3",
+
             "%g/%a/%b[%y]/%a-%b-%n-%t.mp3",
             "%g/%a/%b[%y]/%n-%t.mp3",
             "%g/%a/%b[%y]/%n%t.mp3",
