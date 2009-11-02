@@ -2,9 +2,12 @@ class String
 
   def starts_with?(prefix)
     pattern = Regexp.new "^#{Regexp.escape(prefix)}"
-    ( pattern =~ self ) == MATCHED_AT_CHAR_POSITION_ZERO
+    not ( pattern =~ self ).nil?
   end
 
-  MATCHED_AT_CHAR_POSITION_ZERO = 0
+  def ends_with?(suffix)
+    pattern = Regexp.new "#{Regexp.escape(suffix)}$"
+    not ( pattern =~ self ).nil?
+  end
 
 end
