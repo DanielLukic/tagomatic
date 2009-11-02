@@ -101,6 +101,8 @@ module Tagomatic
     end
 
     def clean_tags
+      return if @tags.nil? or @tags.empty?
+
       artist = @tags['a']
       artist = Regexp.compile("[ -]*#{Regexp.escape(artist)}[ -]*", Regexp::IGNORECASE) if artist
 
