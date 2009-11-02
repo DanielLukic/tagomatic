@@ -46,11 +46,12 @@ module Tagomatic
     protected
 
     def update(tag, value)
+      value.strip if value.respond_to?(:strip)
       @updates[tag] = value
     end
 
     def read(tag)
-      @info.tag2.send(tag)
+      @info.tag.send(tag)
     end
 
     def write(tag, value)
