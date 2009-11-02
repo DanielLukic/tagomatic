@@ -65,7 +65,6 @@ module Tagomatic
     end
 
     def custom_formats_available?
-      puts @options[:formats]
       @options[:formats] and not @options[:formats].empty?
     end
 
