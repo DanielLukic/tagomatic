@@ -17,24 +17,23 @@ module Tagomatic
     FORMAT_ID_YEAR = 'y'
 
     KNOWN_FORMATS = [
-            "%g/%a/%b [%y]/%n - %t.mp3",
-            "%g/%a/%b [%y]/%n-%t.mp3",
-            "%g/%a/%b [%y]/%n %t.mp3",
+            "%g/%a/%b[%y]/%a-%b-%n-%t.mp3",
+            "%g/%a/%b[%y]/%n-%t.mp3",
+            "%g/%a/%b[%y]/%n%t.mp3",
 
-            "%g/%a/%b (%y)/%n - %t.mp3",
-            "%g/%a/%b (%y)/%n-%t.mp3",
-            "%g/%a/%b (%y)/%n %t.mp3",
+            "%g/%a/%b(%y)/%a-%b-%n-%t.mp3",
+            "%g/%a/%b(%y)/%n-%t.mp3",
+            "%g/%a/%b(%y)/%n%t.mp3",
 
-            "%g/%a/(%y) %b/%n - %t.mp3",
-            "%g/%a/(%y) %b/%n %t.mp3",
-            "%g/%a/(%y) %b/%n-%t.mp3",
+            "%g/%a/(%y)%b/%a-%b-%n-%t.mp3",
+            "%g/%a/(%y)%b/%n-%t.mp3",
+            "%g/%a/(%y)%b/%n%t.mp3",
 
-            "%g/%a/%b/%n - %t.mp3",
-            "%g/%a/%b/%n %t.mp3",
             "%g/%a/%b/%n-%t.mp3",
+            "%g/%a/%b/%n%t.mp3",
 
-            "%a - %n - %t.mp3",
-            "%n - %a - %t.mp3",
+            "%g/%a/%b/%t.mp3",
+            "%g/%a/%b/%t.MP3",
     ]
 
     def initialize(options, compiler, mp3info, info_updater_factory, logger)
@@ -174,6 +173,7 @@ module Tagomatic
       end
 
       updater.apply if updater.dirty?
+      puts "updated #{@file_path}" if updater.dirty?
     end
 
     def show_tags
