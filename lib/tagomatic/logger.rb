@@ -12,8 +12,8 @@ module Tagomatic
     end
 
     def exception(exception)
-      $stderr.puts exception.to_s
-      $stderr.puts exception.backtrace
+      puts exception.to_s
+      puts exception.backtrace
     end
 
     def verbose(message)
