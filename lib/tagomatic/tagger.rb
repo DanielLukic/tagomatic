@@ -47,7 +47,7 @@ module Tagomatic
       @logger.verbose "tagging #{file_path}"
 
       prepare_for_current_file(file_path)
-      apply_known_formats
+      apply_formats
       apply_forced_tags
       try_updating_mp3file
     end
@@ -59,14 +59,14 @@ module Tagomatic
       @tags = nil
     end
 
-    def apply_known_formats
+    def apply_formats
       apply_custom_formats if custom_formats_available?
       apply_known_formats if no_tags_set? and guessing_allowed?
     end
 
     def custom_formats_available?
-      formats = @options[:formats]
-      not (formats.nil? or formats.empty?)
+      puts @options[:formats]
+      @options[:formats] and not @options[:formats].empty?
     end
 
     def apply_custom_formats
