@@ -53,35 +53,35 @@ module Tagomatic
           @options[:formats] << format
         end
 
-        opts.on("-c", "--cleantags", "Clean up tags by removing artist and album from title for example.") do |cleantags|
+        opts.on("-c", "--[no-]cleantags", "Clean up tags by removing artist and album from title for example.") do |cleantags|
           @options[:cleantags]= cleantags
         end
-        opts.on("-k", "--cleartags", "Clear any existing v1 and v2 tags.") do |cleartags|
+        opts.on("-k", "--[no-]cleartags", "Clear any existing v1 and v2 tags.") do |cleartags|
           @options[:cleartags]= cleartags
         end
-        opts.on("-e", "--errorstops", "Stop execution if an error occurs.") do |errorstops|
+        opts.on("-e", "--[no-]errorstops", "Stop execution if an error occurs.") do |errorstops|
           @options[:errorstops]= errorstops
         end
-        opts.on("-s", "--guess", "Use format guessing. Can be combined with --format.") do |guess|
+        opts.on("-s", "--[no-]guess", "Use format guessing. Can be combined with --format.") do |guess|
           @options[:guess] = guess
         end
-        opts.on("-l", "--list", "List available formats for guessing.") do |list|
+        opts.on("-l", "--[no-]list", "List available formats for guessing.") do |list|
           @options[:list] = list
         end
-        opts.on("-r", "--recurse", "Scan for files recursively.") do |recurse|
+        opts.on("-r", "--[no-]recurse", "Scan for files recursively.") do |recurse|
           @options[:recurse] = recurse
         end
-        opts.on("-w", "--showtags", "Show the resulting tags.") do |showtags|
+        opts.on("-w", "--[no-]showtags", "Show the resulting tags.") do |showtags|
           @options[:showtags] = showtags
         end
-        opts.on("-u", "--underscores", "Replace underscores with spaces before processing a file name.") do |underscores|
+        opts.on("-u", "--[no-]underscores", "Replace underscores with spaces before processing a file name.") do |underscores|
           @options[:underscores] = underscores
         end
 
         opts.separator ""
         opts.separator "Common options:"
 
-        opts.on("-v", "--verbose", "Run verbosely.") do |verbose|
+        opts.on("-v", "--[no-]verbose", "Run verbosely.") do |verbose|
           @options[:verbose] = verbose
         end
         opts.on_tail("-h", "--help", "Show this message") do
