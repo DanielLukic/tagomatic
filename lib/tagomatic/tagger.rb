@@ -14,21 +14,19 @@ module Tagomatic
     FORMAT_ID_YEAR = 'y'
 
     KNOWN_FORMATS = [
+            "%g/%a/%y %b/%n_-_%t.mp3",
+            "%g/%a/%y %b/%n_%t.mp3",
+            "%g/%a/%y %b/%n-%t.mp3",
+            "%g/%a/%b [%y]/%n-%t.mp3",
+
             "%g/%a/%a_%b_%y/%n_%t.mp3",
-            "%g/VA/%i_-_%b-%y%i/%n_%a_-_%t.mp3",
-            "%g/%a/%a.%b[P]%y(%i)/%n-%i-%i-%i- %t.mp3",
-            "%g/%a/%a - %b [%i]/%n%t [%i].mp3",
             "%g/%a/%b [%y]/%n - %t.mp3",
             "%g/%a/%b/%a - %n - %t.mp3",
-            "%g/%a/%b/%n - %i - %t.mp3",
             "%g/%a/%b/%n - %t.mp3",
             "%g/%a/%b/%n-%t.mp3",
             "%g/%a/%b/%n_%t.mp3",
             "%g/%a/%b/%n %t.mp3",
-            "%g/%a/%b/%i %n - %i - %t.mp3",
             "%g/%a/%a- %b/%n %t.mp3",
-            "%g/%a/%a-%b-%y-%i/%n-%i-%t.mp3",
-            "%g/%a/%a-%b-%y-%i/%n-%t.mp3",
             "%g/%a/%b/%a - %t.mp3",
             "%g/%a/(%y) %b/%n - %t.mp3",
             "%g/%a/%y %b/%n - %t.mp3",
