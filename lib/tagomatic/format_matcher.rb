@@ -15,12 +15,7 @@ module Tagomatic
       tags = {}
       0.upto(@mapping.size) do |index|
         value = matchdata.captures[index]
-        if value
-          value = value.gsub('_', ' ')
-          parts = value.split(' ')
-          capitalized = parts.map {|p| p.capitalize}
-          value = capitalized.join(' ')
-        end
+        value = normalize(value) if value
         tags[@mapping[index]] = value
       end
       tags
@@ -28,6 +23,15 @@ module Tagomatic
 
     def to_s
       @format
+    end
+
+    protected
+
+    def normalize(value)
+      value = value.gsub('_', ' ')
+      parts = value.split(' ')
+      capitalized = parts.map {|p| p.capitalize}
+      capitalized.join(' ')
     end
 
   end
