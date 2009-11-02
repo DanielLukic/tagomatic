@@ -33,10 +33,13 @@ module Tagomatic
     end
 
     def enter_scannable_folder(&block)
+      folder_path = @file_path
+      @logger.verbose "entering #{folder_path}"
       save_current_options
       apply_local_options if has_local_options?
-      do_scan_folder(@file_path, &block)
+      do_scan_folder(folder_path, &block)
       pop_local_options
+      @logger.verbose "leaving #{folder_path}"
     end
 
     def save_current_options
@@ -55,6 +58,7 @@ module Tagomatic
 
     def apply_local_options
       local_options = read_local_options
+      @logger.verbose "applying local options: #{local_options}"
       @parser.parse!(local_options)
     end
 
@@ -83,6 +87,7 @@ module Tagomatic
     end
 
     def apply_local_formats(list_of_local_format_file_names)
+      @logger.verbose "applying local formats: #{list_of_local_format_file_names}"
       local_formats = list_of_local_format_file_names.map do |file_name|
         format = file_name.sub('.format=', '')
         format.gsub!('|', '/')
