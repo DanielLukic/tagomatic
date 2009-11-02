@@ -4,12 +4,12 @@ module Tagomatic
 
     FORMAT_REGEXP_ARTIST = '([^\/]+)'
     FORMAT_REGEXP_ALBUM = '([^\/]+)'
-    FORMAT_REGEXP_DISC = '([0-9]+)'
+    FORMAT_REGEXP_DISC = '\s*([0-9]+)\s*'
     FORMAT_REGEXP_GENRE = '([^\/]+)'
     FORMAT_REGEXP_IGNORE = '([^\/]+)'
     FORMAT_REGEXP_TITLE = '([^\/]+)'
-    FORMAT_REGEXP_TRACKNUM = '([0-9]+)'
-    FORMAT_REGEXP_YEAR = '([0-9]+)'
+    FORMAT_REGEXP_TRACKNUM = '\s*([0-9]+)\s*'
+    FORMAT_REGEXP_YEAR = '\s*([0-9]+)\s*'
 
     def initialize(format_matcher_factory)
       @format_matcher_factory = format_matcher_factory
