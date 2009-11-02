@@ -124,22 +124,25 @@ module Tagomatic
 
     def update_mp3file
       open_mp3file
-      apply_tags
-      close_mp3file
-      # for some reasing mp3info will not write values if you read them before writing.
-      # therefore the file has to be closed first, then reopened. note: the mp3info
-      # reload method seems to be broken, too. obviously there is a good chance i simply
-      # do not understand the mp3info api..
-      open_mp3file
+      clear_tags if @options[:cleartags]
       show_mp3info if @options[:verbose]
-      show_v1tags if @options[:showv1]
-      show_v2tags if @options[:showv2]
+      apply_tags
+      show_tags if @options[:showtags]
     ensure
       close_mp3file
     end
 
     def open_mp3file
       @mp3 = @mp3info.open(@file_path)
+    end
+
+    def clear_tags
+      @mp3.removetag1
+      @mp3.removetag2
+    end
+
+    def show_mp3info
+      puts @mp3
     end
 
     def apply_tags
@@ -154,55 +157,28 @@ module Tagomatic
 
         updater.album = value + discnum_suffix if tag == FORMAT_ID_ALBUM
         updater.artist = value if tag == FORMAT_ID_ARTIST
+        updater.genre_s = value if tag == FORMAT_ID_GENRE
         updater.title = value if tag == FORMAT_ID_TITLE
         updater.tracknum = value.to_i if tag == FORMAT_ID_TRACKNUM
         updater.year = value if tag == FORMAT_ID_YEAR
       end
 
       updater.apply if updater.dirty?
-
-      genre = @tags[FORMAT_ID_GENRE]
-      if genre and @mp3.tag2.TCON.to_s != genre.to_s
-        #info.tag.genre = genre DOES NOT WORK!
-        @mp3.flush # this is required when using tag1/tag2 now after using the generic 'tag' above
-        @mp3.tag1.genre = nil # we cannot set arbitrary values here. so we simply clear it.
-        @mp3.tag2.TCON = genre
-      end
     end
 
-    def show_mp3info
-      puts @mp3
-    end
-
-    def show_v1tags
+    def show_tags
       output = 'g='
-      output << ( @mp3.tag1.genre || '<genre>' )
+      output << ( @mp3.tag.genre_s || '<genre>' )
       output << '/a='
-      output << ( @mp3.tag1.artist || '<artist>' )
+      output << ( @mp3.tag.artist || '<artist>' )
       output << '/b='
-      output << ( @mp3.tag1.album || '<album>' )
+      output << ( @mp3.tag.album || '<album>' )
       output << '/y='
-      output << ( @mp3.tag1.year ? "#{@mp3.tag1.year}" : '<year>' )
+      output << ( @mp3.tag.year ? "#{@mp3.tag2.TYER}" : '<year>' )
       output << '/n='
-      output << ( @mp3.tag1.tracknum ? "#{@mp3.tag1.tracknum}" : '<tracknum>' )
+      output << ( @mp3.tag.tracknum ? "#{@mp3.tag2.TRCK}" : '<tracknum>' )
       output << '/t='
-      output << ( @mp3.tag1.title || '<title>' )
-      puts output
-    end
-
-    def show_v2tags
-      output = 'g='
-      output << ( @mp3.tag2.TCON || '<genre>' )
-      output << '/a='
-      output << ( @mp3.tag2.TPE1 || '<artist>' )
-      output << '/b='
-      output << ( @mp3.tag2.TALB || '<album>' )
-      output << '/y='
-      output << ( @mp3.tag2.TYER ? "#{@mp3.tag2.TYER}" : '<year>' )
-      output << '/n='
-      output << ( @mp3.tag2.TRCK ? "#{@mp3.tag2.TRCK}" : '<tracknum>' )
-      output << '/t='
-      output << ( @mp3.tag2.TIT2 || '<title>' )
+      output << ( @mp3.tag.title || '<title>' )
       puts output
     end
 

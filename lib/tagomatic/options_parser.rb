@@ -53,6 +53,9 @@ module Tagomatic
           @options[:formats] << format
         end
 
+        opts.on("-k", "--cleartags", "Clear any existing v1 and v2 tags.") do |cleartags|
+          @options[:cleartags ]= cleartags
+        end
         opts.on("-e", "--errorstops", "Stop execution if an error occurs.") do |errorstops|
           @options[:errorstops ]= errorstops
         end
@@ -65,11 +68,8 @@ module Tagomatic
         opts.on("-r", "--recurse", "Scan for files recursively.") do |recurse|
           @options[:recurse] = recurse
         end
-        opts.on("-1", "--showv1", "Show the v1 tag values.") do |showv1|
-          @options[:showv1] = showv1
-        end
-        opts.on("-2", "--showv2", "Show the v2 tag values.") do |showv2|
-          @options[:showv2] = showv2
+        opts.on("-w", "--showtags", "Show the resulting tags.") do |showtags|
+          @options[:showtags] = showtags
         end
 
         opts.separator ""
