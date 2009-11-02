@@ -133,14 +133,14 @@ module Tagomatic
 
       album = @tags['b']
       album = album.sub(artist, '') if artist and album
-      @tags['b'] = album unless album.empty?
+      @tags['b'] = album unless album.nil? or album.empty?
 
       album = Regexp.compile("[ -]*#{Regexp.escape(album)}[ -]*", Regexp::IGNORECASE) if album
 
       title = @tags['t']
       title = title.sub(artist, '') if artist and title
       title = title.sub(album, '') if album and title
-      @tags['t'] = title unless title.empty?
+      @tags['t'] = title unless title.nil? or title.empty?
     end
 
     def normalize_tags
