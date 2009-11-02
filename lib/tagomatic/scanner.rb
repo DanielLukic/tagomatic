@@ -75,7 +75,7 @@ module Tagomatic
 
     def do_scan_folder(folder_path, &block)
       @logger.verbose "scanning #{folder_path}"
-      entries = Dir.entries(folder_path)
+      entries = Dir.entries(folder_path).sort
 
       local_formats = entries.select { |entry| entry.starts_with?('.format=') }
       apply_local_formats(local_formats)
