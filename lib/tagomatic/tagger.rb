@@ -1,3 +1,6 @@
+require 'fileutils'
+
+require 'monkey/id3v2'
 require 'tagomatic/info_updater'
 
 module Tagomatic
@@ -43,11 +46,10 @@ module Tagomatic
     end
 
     def process!(file_path)
-      file_path.gsub '_', ' ' if @options[:underscores]
-
       @logger.verbose "tagging #{file_path}"
 
       prepare_for_current_file(file_path)
+      replace_underscores if @options[:underscores]
       apply_formats
       apply_forced_tags
       try_updating_mp3file
@@ -58,6 +60,14 @@ module Tagomatic
     def prepare_for_current_file(file_path)
       @file_path = file_path
       @tags = nil
+    end
+
+    def replace_underscores
+      clean = @file_path.gsub('_', ' ')
+      return if clean == @file_path
+      @logger.verbose "renaming #{@file_path} to #{clean}"
+      FileUtils.mv @file_path, clean
+      @file_path = clean
     end
 
     def apply_formats
@@ -174,9 +184,9 @@ module Tagomatic
       output << '/b='
       output << ( @mp3.tag.album || '<album>' )
       output << '/y='
-      output << ( @mp3.tag.year ? "#{@mp3.tag2.TYER}" : '<year>' )
+      output << ( @mp3.tag.year ? "#{@mp3.tag.year}" : '<year>' )
       output << '/n='
-      output << ( @mp3.tag.tracknum ? "#{@mp3.tag2.TRCK}" : '<tracknum>' )
+      output << ( @mp3.tag.tracknum ? "#{@mp3.tag.tracknum}" : '<tracknum>' )
       output << '/t='
       output << ( @mp3.tag.title || '<title>' )
       puts output
