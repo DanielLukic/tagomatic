@@ -87,9 +87,14 @@ module Tagomatic
       clean = file_name.gsub('_', ' ')
       return if clean == file_name
       @logger.verbose "renaming #{file_name} to #{clean}"
-      FileUtils.cd folder_path
-      FileUtils.mv file_name, clean
+      quoted_source = escape_file_name(file_name)
+      quoted_destination = escape_file_name(clean)
+      system %Q[cd "#{folder_path}" && mv "#{quoted_source}" "#{quoted_destination}"] or return
       @file_path = File.join(folder_path, clean)
+    end
+
+    def escape_file_name(file_name)
+      file_name.sub('"', '\"').sub('\'', '\\\'').sub('`', '\`')
     end
 
     def apply_formats
