@@ -53,11 +53,14 @@ module Tagomatic
           @options[:formats] << format
         end
 
+        opts.on("-c", "--cleantags", "Clean up tags by removing artist and album from title for example.") do |cleantags|
+          @options[:cleantags]= cleantags
+        end
         opts.on("-k", "--cleartags", "Clear any existing v1 and v2 tags.") do |cleartags|
-          @options[:cleartags ]= cleartags
+          @options[:cleartags]= cleartags
         end
         opts.on("-e", "--errorstops", "Stop execution if an error occurs.") do |errorstops|
-          @options[:errorstops ]= errorstops
+          @options[:errorstops]= errorstops
         end
         opts.on("-s", "--guess", "Use format guessing. Can be combined with --format.") do |guess|
           @options[:guess] = guess

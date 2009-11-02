@@ -5,6 +5,7 @@ module Tagomatic
   class Options < Hash
 
     def initialize
+      self[:cleantags] = false
       self[:cleartags] = false
       self[:files] = []
       self[:formats] = []
