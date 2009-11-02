@@ -50,6 +50,8 @@ module Tagomatic
       prepare_for_current_file(file_path)
       replace_underscores if @options[:underscores]
       apply_formats
+      clean_tags if @options[:cleantags]
+      normalize_tags
       apply_forced_tags
       try_updating_mp3file
     end
@@ -112,6 +114,33 @@ module Tagomatic
 
     def compile_if_necessary(formats)
       formats.map! { |f| f.is_a?(FormatMatcher) ? f : @compiler.compile_format(f) }
+    end
+
+    def clean_tags
+      artist = @tags['a']
+      artist = Regexp.compile("[ -]*#{Regexp.escape(artist)}[ -]*", Regexp::IGNORECASE) if artist
+
+      album = @tags['b']
+      album = album.sub(artist, '') if artist and album
+      @tags['b'] = album unless album.empty?
+
+      album = Regexp.compile("[ -]*#{Regexp.escape(album)}[ -]*", Regexp::IGNORECASE) if album
+
+      title = @tags['t']
+      title = title.sub(artist, '') if artist and title
+      title = title.sub(album, '') if album and title
+      @tags['t'] = title unless title.empty?
+    end
+
+    def normalize_tags
+      normalized = Hash.new
+      @tags.each do |tag, value|
+        next if value.nil?
+        parts = value.gsub('_', ' ').split(' ')
+        capitalized = parts.map {|p| p.capitalize}
+        normalized[tag] = capitalized.join(' ')
+      end
+      @tags = normalized
     end
 
     def apply_forced_tags
