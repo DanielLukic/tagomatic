@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module relativePaths="false" type="RUBY_MODULE" version="4">
-  <component name="GemRequirementsHolder" version="2" />
-  <component name="NewModuleRootManager" inherit-compiler-output="false">
+  <component name="GemRequirementsHolder" version="2">
+    <requirement>
+      <requirement>
+        <dependency name="ruby-mp3info" version="0" bound="GREATER_OR_EQUAL" />
+      </requirement>
+      <source manual="true" />
+    </requirement>
+  </component>
+  <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-  </component>
-  <component name="RModuleSettingsStorage">
-    <RMODULE_SETTINGS_STORAGE_ID NAME="NUMBER" VALUE="0" />
+    <orderEntry type="library" name="[gem] ruby-mp3info (v0.6.13, /usr/lib/ruby/gems/1.8/gems/ruby-mp3info-0.6.13)" level="application" />
   </component>
 </module>
 

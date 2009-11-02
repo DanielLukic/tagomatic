@@ -19,6 +19,11 @@ rdoc
 pkg
 
 ## PROJECT::SPECIFIC
+/.idea/encodings.xml
+/.idea/inspectionProfiles/
+/.idea/misc.xml
+/.idea/projectCodeStyle.xml
+/.idea/vcs.xml
 /.idea/workspace.xml
 /tagomatic.gemspec
 *.mp3
