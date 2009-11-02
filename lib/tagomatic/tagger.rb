@@ -44,6 +44,8 @@ module Tagomatic
     end
 
     def process!(file_path)
+      file_path.gsub '_', ' ' if @options[:underscores]
+
       @logger.verbose "tagging #{file_path}"
 
       prepare_for_current_file(file_path)
