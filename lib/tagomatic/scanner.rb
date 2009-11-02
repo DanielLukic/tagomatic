@@ -35,7 +35,6 @@ module Tagomatic
     def enter_scannable_folder(&block)
       save_current_options
       apply_local_options if has_local_options?
-      apply_local_formats if has_local_formats?
       do_scan_folder(@file_path, &block)
       pop_local_options
     end
@@ -68,38 +67,25 @@ module Tagomatic
       local_options
     end
 
-    def determine_local_formats_glob_pattern()
-      "#{@file_path}/.format=*"
-    end
-
-    def list_local_formats
-      Dir.glob determine_local_formats_glob_pattern
-    end
-
-    def has_local_formats?
-      not list_local_formats.empty?
-    end
-
-    def apply_local_formats
-      local_formats = read_local_formats
-      @options[:formats].concat(local_formats)
-    end
-
-    def read_local_formats
-      list_local_formats.map do |format_file_path|
-        base_name = File.basename(format_file_path)
-        format = base_name.sub('.format=', '')
-        format.gsub!('|', '/')
-      end
-    end
-
     def do_scan_folder(folder_path, &block)
       @logger.verbose "scanning #{folder_path}"
       entries = Dir.entries(folder_path)
+
+      local_formats = entries.select { |entry| entry.starts_with?('.format=') }
+      apply_local_formats(local_formats)
+
       entries.each do |entry|
         next if entry == '.' or entry == '..' or entry.starts_with?('.format=')
         process!(folder_path, entry, &block)
       end
+    end
+
+    def apply_local_formats(list_of_local_format_file_names)
+      local_formats = list_of_local_format_file_names.map do |file_name|
+        format = file_name.sub('.format=', '')
+        format.gsub!('|', '/')
+      end
+      @options[:formats].concat(local_formats)
     end
 
     def pop_local_options
@@ -107,7 +93,7 @@ module Tagomatic
     end
 
     LOCAL_CONFIG_FILE_NAME = '.tagomatic'
-    
+
   end
 
 end
