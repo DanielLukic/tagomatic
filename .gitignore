@@ -19,5 +19,8 @@ rdoc
 pkg
 
 ## PROJECT::SPECIFIC
-.idea/workspace.xml
-tagomatic.gemspec
+/.idea/workspace.xml
+/tagomatic.gemspec
+*.mp3
+*.jpg
+album.id
