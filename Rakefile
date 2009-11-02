@@ -52,3 +52,6 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
+
+$:.unshift File.join(File.dirname(__FILE__), 'lib')
+Dir['lib/tasks/*.rb'].each {|t| load t}
