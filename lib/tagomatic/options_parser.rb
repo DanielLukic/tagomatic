@@ -71,6 +71,9 @@ module Tagomatic
         opts.on("-w", "--showtags", "Show the resulting tags.") do |showtags|
           @options[:showtags] = showtags
         end
+        opts.on("-u", "--underscores", "Replace underscores with spaces before processing a file name.") do |underscores|
+          @options[:underscores] = underscores
+        end
 
         opts.separator ""
         opts.separator "Common options:"

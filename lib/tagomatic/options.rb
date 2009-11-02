@@ -13,6 +13,7 @@ module Tagomatic
       self[:list] = false
       self[:recurse] = false
       self[:showtags] = false
+      self[:underscores] = false
       self[:verbose] = false
     end
 
