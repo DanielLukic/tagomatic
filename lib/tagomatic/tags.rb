@@ -28,6 +28,7 @@ module Tagomatic
     FORMAT_ID_WHITESPACE = 's'
     FORMAT_ID_EXTENDED_WHITESPACE = 'S'
     FORMAT_ID_YEAR = 'y'
+    FORMAT_ID_SURROUNDED_YEAR = 'Y'
 
     FORMAT_REGEXP_ARTIST = '([^\/]+)'
     FORMAT_REGEXP_ARTIST_AGAIN = FORMAT_REGEXP_ARTIST
@@ -36,11 +37,12 @@ module Tagomatic
     FORMAT_REGEXP_DISC = '\s*([0-9]+)\s*'
     FORMAT_REGEXP_GENRE = '([^\/]+)'
     FORMAT_REGEXP_IGNORE = '([^\/]+)'
-    FORMAT_REGEXP_TRACKNUM = '\s*([0-9]+)\s*'
+    FORMAT_REGEXP_TRACKNUM = '\s*\[?([0-9]+)\]?\s*'
     FORMAT_REGEXP_TITLE = '([^\/]+)'
     FORMAT_REGEXP_WHITESPACE = '\s*'
     FORMAT_REGEXP_EXTENDED_WHITESPACE = '[\s\-_\.]*'
     FORMAT_REGEXP_YEAR = '\s*([0-9]+)\s*'
+    FORMAT_REGEXP_SURROUNDED_YEAR = '\s*[\(\[]([0-9]+)[\)\]]\s*'
 
   end
 

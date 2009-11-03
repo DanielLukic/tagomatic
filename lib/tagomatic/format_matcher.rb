@@ -22,6 +22,7 @@ module Tagomatic
         value = normalize(value) if value
         @tags[@mapping[index]] = value
       end
+      @tags[FORMAT_ID_YEAR] ||= @tags[FORMAT_ID_SURROUNDED_YEAR]
       return nil unless valid_constraints?
       @tags
     end

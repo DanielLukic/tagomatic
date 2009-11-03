@@ -32,6 +32,7 @@ module Tagomatic
         regexp << FORMAT_REGEXP_WHITESPACE if tag == FORMAT_ID_WHITESPACE
         regexp << FORMAT_REGEXP_EXTENDED_WHITESPACE if tag == FORMAT_ID_EXTENDED_WHITESPACE
         regexp << FORMAT_REGEXP_YEAR if tag == FORMAT_ID_YEAR
+        regexp << FORMAT_REGEXP_SURROUNDED_YEAR if tag == FORMAT_ID_SURROUNDED_YEAR
         regexp << Regexp.escape(tail)
       end
 
