@@ -155,7 +155,7 @@ module Tagomatic
       apply_tags
       show_tags if @options[:showtags]
     ensure
-      close_mp3file
+      try_closeing_mp3file
     end
 
     def open_mp3file
@@ -207,6 +207,12 @@ module Tagomatic
       output << '/t='
       output << ( @mp3.tag.title || '<title>' )
       puts output
+    end
+
+    def try_closeing_mp3file
+      close_mp3file
+    rescue
+      show_error "failed closing #{@file_path} - file probably not updated", $!
     end
 
     def close_mp3file
