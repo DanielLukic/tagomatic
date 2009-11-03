@@ -16,7 +16,7 @@ module Tagomatic
       @file_path = path_prefix.nil? ? file_or_folder : File.join(path_prefix, file_or_folder)
       @logger.verbose "processing #{@file_path}"
       if is_taggable_file?
-        yield @file_path
+        yield File.expand_path(@file_path)
       elsif is_scannable?
         enter_scannable_folder(&block)
       end
