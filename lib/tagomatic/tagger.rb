@@ -119,6 +119,8 @@ module Tagomatic
     end
 
     def normalize_tags
+      return if @tags.nil? or @tags.empty?
+
       normalized = Hash.new
       @tags.each do |tag, value|
         next if value.nil?
