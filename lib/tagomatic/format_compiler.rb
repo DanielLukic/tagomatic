@@ -19,8 +19,10 @@ module Tagomatic
         tag = tag_and_tail[0, 1]
         tail = tag_and_tail[1..-1]
         tag_mapping << tag
-        regexp << FORMAT_REGEXP_ALBUM if tag == FORMAT_ID_ALBUM
         regexp << FORMAT_REGEXP_ARTIST if tag == FORMAT_ID_ARTIST
+        regexp << FORMAT_REGEXP_ARTIST_AGAIN if tag == FORMAT_ID_ARTIST_AGAIN
+        regexp << FORMAT_REGEXP_ALBUM if tag == FORMAT_ID_ALBUM
+        regexp << FORMAT_REGEXP_ALBUM_AGAIN if tag == FORMAT_ID_ALBUM_AGAIN
         regexp << FORMAT_REGEXP_DISC if tag == FORMAT_ID_DISC
         regexp << FORMAT_REGEXP_GENRE if tag == FORMAT_ID_GENRE
         regexp << FORMAT_REGEXP_IGNORE if tag == FORMAT_ID_IGNORE

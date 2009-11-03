@@ -17,7 +17,9 @@ module Tagomatic
     #   --format "%g/%a/%b - encoded by noone - %y/%n - %t.mp3"
 
     FORMAT_ID_ARTIST = 'a'
+    FORMAT_ID_ARTIST_AGAIN = 'A'
     FORMAT_ID_ALBUM = 'b'
+    FORMAT_ID_ALBUM_AGAIN = 'B'
     FORMAT_ID_DISC = 'd'
     FORMAT_ID_GENRE = 'g'
     FORMAT_ID_IGNORE = 'i'
@@ -26,7 +28,9 @@ module Tagomatic
     FORMAT_ID_YEAR = 'y'
 
     FORMAT_REGEXP_ARTIST = '([^\/]+)'
+    FORMAT_REGEXP_ARTIST_AGAIN = FORMAT_REGEXP_ARTIST
     FORMAT_REGEXP_ALBUM = '([^\/]+)'
+    FORMAT_REGEXP_ALBUM_AGAIN = FORMAT_REGEXP_ALBUM
     FORMAT_REGEXP_DISC = '\s*([0-9]+)\s*'
     FORMAT_REGEXP_GENRE = '([^\/]+)'
     FORMAT_REGEXP_IGNORE = '([^\/]+)'
