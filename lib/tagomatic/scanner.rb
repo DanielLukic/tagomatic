@@ -65,7 +65,7 @@ module Tagomatic
     def read_local_options
       local_options = []
       matcher = @local_options_matcher_factory.create_local_options_matcher
-      lines = File.readlines(determine_local_config_file_path)
+      lines = File.readlines(determine_local_config_file_path).map {|line| line.chomp}
       lines.each do |line|
         matcher.process!(line)
         local_options.concat matcher.to_argv
