@@ -20,7 +20,7 @@ module Tagomatic
         register :logger => Tagomatic::Logger.new(get_options)
         register :scanner => Tagomatic::Scanner.new(get_options, get_parser, get_local_options_matcher_factory, get_logger)
         register :format_matcher_factory => Tagomatic::ObjectFactory.new
-        register :compiler => Tagomatic::FormatCompiler.new(get_format_matcher_factory)
+        register :compiler => Tagomatic::FormatCompiler.new(get_format_matcher_factory, get_logger)
         register :mp3info => Tagomatic::Mp3InfoWrapper.new
         register :info_updater_factory => Tagomatic::ObjectFactory.new
         register :tagger => Tagomatic::Tagger.new(get_options, get_compiler, get_mp3info, get_info_updater_factory, get_logger)

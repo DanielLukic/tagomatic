@@ -6,8 +6,9 @@ module Tagomatic
 
     include Tagomatic::Tags
 
-    def initialize(format_matcher_factory)
+    def initialize(format_matcher_factory, logger)
       @format_matcher_factory = format_matcher_factory
+      @logger = logger
     end
 
     def compile_format(format)
@@ -36,6 +37,9 @@ module Tagomatic
 
       compiled = Regexp.compile(regexp, Regexp::IGNORECASE)
       @format_matcher_factory.create_format_matcher(compiled, tag_mapping, format)
+    rescue
+      @logger.error "failed compiling #{format}", $!
+      raise $!
     end
 
   end
