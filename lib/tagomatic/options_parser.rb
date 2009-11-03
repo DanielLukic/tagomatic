@@ -53,7 +53,7 @@ module Tagomatic
         opts.separator "Primary options:"
 
         opts.on("-f", "--format [FORMAT]", "Try applying this format string to determine tags. Multiple occurrences allowed.") do |format|
-          @options[:formats] << format
+          @options[:formats] << format.gsub('|', '/')
         end
 
         opts.separator " "
