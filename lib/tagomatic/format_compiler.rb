@@ -30,7 +30,7 @@ module Tagomatic
         regexp << Regexp.escape(tail)
       end
 
-      compiled = Regexp.compile(regexp)
+      compiled = Regexp.compile(regexp, Regexp::IGNORECASE)
       @format_matcher_factory.create_format_matcher(compiled, tag_mapping, format)
     end
 
