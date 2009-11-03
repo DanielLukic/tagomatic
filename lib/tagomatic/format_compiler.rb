@@ -26,8 +26,10 @@ module Tagomatic
         regexp << FORMAT_REGEXP_DISC if tag == FORMAT_ID_DISC
         regexp << FORMAT_REGEXP_GENRE if tag == FORMAT_ID_GENRE
         regexp << FORMAT_REGEXP_IGNORE if tag == FORMAT_ID_IGNORE
-        regexp << FORMAT_REGEXP_TITLE if tag == FORMAT_ID_TITLE
         regexp << FORMAT_REGEXP_TRACKNUM if tag == FORMAT_ID_TRACKNUM
+        regexp << FORMAT_REGEXP_TITLE if tag == FORMAT_ID_TITLE
+        regexp << FORMAT_REGEXP_WHITESPACE if tag == FORMAT_ID_WHITESPACE
+        regexp << FORMAT_REGEXP_EXTENDED_WHITESPACE if tag == FORMAT_ID_EXTENDED_WHITESPACE
         regexp << FORMAT_REGEXP_YEAR if tag == FORMAT_ID_YEAR
         regexp << Regexp.escape(tail)
       end
