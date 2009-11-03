@@ -39,7 +39,6 @@ module Tagomatic
     def run!
       options = @configuration[:options]
 
-      show_known_formats_and_exit if options[:list]
       show_usage_and_exit if options[:files].empty?
 
       scanner = @configuration[:scanner]
@@ -55,11 +54,6 @@ module Tagomatic
 
     def show_usage_and_exit
       puts @configuration[:parser].show_help
-      exit 1
-    end
-
-    def show_known_formats_and_exit
-      puts Tagomatic::Tagger::KNOWN_FORMATS
       exit 1
     end
 

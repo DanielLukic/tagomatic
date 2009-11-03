@@ -2,43 +2,42 @@ module Tagomatic
 
   module KnownFormats
 
-    KNOWN_FORMATS = [
-            "%g/%a/%b/Disc%d/%n-%t.mp3",
-            "%g/%a/%b/Disc%d/%n.%t.mp3",
-            "%g/%a/%b/Disc%d/%n%t.mp3",
-            "%g/%a/%b/Disc%d/%t.mp3",
-            "%g/%a/%b/cd%d/%n-%t.mp3",
-            "%g/%a/%b/cd%d/%n.%t.mp3",
-            "%g/%a/%b/cd%d/%n%t.mp3",
-            "%g/%a/%b/cd%d/%t.mp3",
+    PREFIXES = [
+            "%g/%a/%b-%y/",
+            "%g/%a/%b %Y/",
+            "%g/%a/%y-%b/",
+            "%g/%a/%Y %b/",
+            "%g/%a/%b/",
+            ]
 
-            "%g/%a/%b[%y]/%a-%b-%n-%t.mp3",
-            "%g/%a/%b[%y]/%n-%t.mp3",
-            "%g/%a/%b[%y]/%n.%t.mp3",
-            "%g/%a/%b[%y]/%n%t.mp3",
+    INFIXES = [
+            "Disc%d/",
+            "cd%d/",
+            "",
+            ]
 
-            "%g/%a/%b(%y)/%a-%b-%n-%t.mp3",
-            "%g/%a/%b(%y)/%n-%t.mp3",
-            "%g/%a/%b(%y)/%n.%t.mp3",
-            "%g/%a/%b(%y)/%n%t.mp3",
+    SUFFIXES = [
+            "%A-%B-%n-%t.mp3",
+            "%B-%n-%t.mp3",
+            "%A-%n-%t.mp3",
+            "%n-%t.mp3",
+            "%n.%t.mp3",
+            "%n%t.mp3",
+            ]
 
-            "%g/%a/(%y)%b/%a-%b-%n-%t.mp3",
-            "%g/%a/(%y)%b/%n-%t.mp3",
-            "%g/%a/(%y)%b/%n.%t.mp3",
-            "%g/%a/(%y)%b/%n%t.mp3",
+    def self.inflate_formats
+      formats = []
+      PREFIXES.each do |p|
+        INFIXES.each do |i|
+          SUFFIXES.each do |s|
+            formats << (p + i + s)
+          end
+        end
+      end
+      formats
+    end
 
-            "%g/%a/%y - %b/%a-%b-%n-%t.mp3",
-            "%g/%a/%y - %b/%n-%t.mp3",
-            "%g/%a/%y - %b/%n.%t.mp3",
-            "%g/%a/%y - %b/%n%t.mp3",
-
-            "%g/%a/%b/%a-%b-%n-%t.mp3",
-            "%g/%a/%b/%n-%t.mp3",
-            "%g/%a/%b/%n.%t.mp3",
-            "%g/%a/%b/%n%t.mp3",
-
-            "%g/%a/%b/%t.mp3",
-    ]
+    KNOWN_FORMATS = inflate_formats
 
   end
 

@@ -88,19 +88,20 @@ module Tagomatic
 
         opts.on("--help-formats", "Show help on writing --format strings.") do
           puts File.read(File.join(File.dirname($0), '..', 'lib/tagomatic/tags.rb'))
-          exit
+          exit 1
         end
         opts.on("--list-formats", "List built-in formats used for guessing with --guess option.") do |list|
-          @options[:list] = list
+          puts Tagomatic::Tagger::KNOWN_FORMATS
+          exit 1
         end
         opts.on("--version", "Show version information.") do |version|
           puts File.read(File.join(File.dirname($0), '..', 'VERSION'))
-          exit
+          exit 1
         end
 
         opts.on_tail("--help", "Show this message") do
           puts opts
-          exit
+          exit 1
         end
       end
     end
