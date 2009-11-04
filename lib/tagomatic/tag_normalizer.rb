@@ -18,13 +18,11 @@ module Tagomatic
     end
 
     def split_by_spaces_and_underscores(value)
-      @parts = value.split(/[ _]+/)
+      @parts = value.split(NORMALIZER_SPLIT_REGEX)
     end
 
     def strip_dashes_and_brackets
-      opening = Regexp.escape('-([.')
-      closing = Regexp.escape('-)].')
-      @parts.map! { |part| part.sub(/^[#{opening}]\s*/, '').sub(/\s*[#{closing}]$/, '') }
+      @parts.map! { |part| part.sub(NORMALIZER_STRIP_LEFT, '').sub(NORMALIZER_STRIP_RIGHT, '') }
     end
 
     def drop_empty_words
@@ -38,6 +36,14 @@ module Tagomatic
     def get_resulting_value
       @parts.join(' ')
     end
+
+    NORMALIZER_SPLIT_REGEX = /[ _-]+/
+
+    NORMALIZER_LEFT_LITERALS = Regexp.escape('-([.')
+    NORMALIZER_RIGHT_LITERALS = Regexp.escape('-)].')
+
+    NORMALIZER_STRIP_LEFT = /^[#{NORMALIZER_LEFT_LITERALS}]+\s*/
+    NORMALIZER_STRIP_RIGHT = /\s*[#{NORMALIZER_RIGHT_LITERALS}]+$/
 
   end
 
