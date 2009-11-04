@@ -12,9 +12,10 @@ module Tagomatic
     include Tagomatic::Tags
     include Tagomatic::KnownFormats
 
-    def initialize(options, compiler, mp3info, info_updater_factory, logger)
+    def initialize(options, compiler, tags_processor_chain, mp3info, info_updater_factory, logger)
       @options = options
       @compiler = compiler
+      @tags_processor_chain = tags_processor_chain
       @mp3info = mp3info
       @info_updater_factory = info_updater_factory
       @logger = logger
@@ -26,9 +27,7 @@ module Tagomatic
       prepare_for_current_file(file_path)
       replace_underscores if @options[:underscores]
       apply_formats
-      clean_tags if @options[:cleantags]
-      normalize_tags
-      apply_forced_tags
+      run_processor_chain
       try_updating_mp3file
     end
 
@@ -100,46 +99,9 @@ module Tagomatic
       formats.map! { |f| f.is_a?(FormatMatcher) ? f : @compiler.compile_format(f) }
     end
 
-    def clean_tags
-      return if @tags.nil? or @tags.empty?
-
-      artist = @tags['a']
-      artist = Regexp.compile("[ -]*#{Regexp.escape(artist)}[ -]*", Regexp::IGNORECASE) if artist
-
-      album = @tags['b']
-      album = album.sub(artist, '') if artist and album
-      @tags['b'] = album unless album.nil? or album.empty?
-
-      album = Regexp.compile("[ -]*#{Regexp.escape(album)}[ -]*", Regexp::IGNORECASE) if album
-
-      title = @tags['t']
-      title = title.sub(artist, '') if artist and title
-      title = title.sub(album, '') if album and title
-      @tags['t'] = title unless title.nil? or title.empty?
-    end
-
-    def normalize_tags
-      return if @tags.nil? or @tags.empty?
-
-      normalized = Hash.new
-      @tags.each do |tag, value|
-        next if value.nil?
-        parts = value.gsub('_', ' ').split(' ')
-        capitalized = parts.map {|p| p.capitalize}
-        normalized[tag] = capitalized.join(' ')
-      end
-      @tags = normalized
-    end
-
-    def apply_forced_tags
+    def run_processor_chain
       @tags ||= Hash.new
-      @tags[:album] if @options[:album]
-      @tags[:artist] if @options[:artist]
-      @tags[:discnum] if @options[:discnum]
-      @tags[:genre] if @options[:genre]
-      @tags[:title] if @options[:title]
-      @tags[:tracknum] if @options[:tracknum]
-      @tags[:year] if @options[:year]
+      @tags_processor_chain.process!(@tags)
     end
 
     def try_updating_mp3file

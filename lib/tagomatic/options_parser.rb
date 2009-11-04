@@ -73,6 +73,9 @@ module Tagomatic
         opts.on("-r", "--[no-]recurse", "Scan for files recursively.") do |recurse|
           @options[:recurse] = recurse
         end
+        opts.on(      "--[no-]removeurls", "Remove URLs from file names.") do |removeurls|
+          @options[:removeurls] = removeurls
+        end
         opts.on("-u", "--[no-]underscores", "Replace underscores with spaces before processing a file name.") do |underscores|
           @options[:underscores] = underscores
         end

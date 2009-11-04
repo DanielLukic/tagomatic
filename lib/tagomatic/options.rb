@@ -13,6 +13,7 @@ module Tagomatic
       self[:guess] = false
       self[:list] = false
       self[:recurse] = false
+      self[:removeurls] = false
       self[:showtags] = false
       self[:underscores] = false
       self[:verbose] = false
