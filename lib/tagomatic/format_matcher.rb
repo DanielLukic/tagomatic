@@ -17,7 +17,7 @@ module Tagomatic
       return nil unless matchdata
       return nil unless matchdata.captures.size == @mapping.size
       @tags = {}
-      0.upto(@mapping.size) do |index|
+      0.upto(@mapping.size - 1) do |index|
         value = matchdata.captures[index]
         value = normalize(value) if value
         @tags[@mapping[index]] = value
