@@ -19,6 +19,7 @@ rdoc
 pkg
 
 ## PROJECT::SPECIFIC
+/.idea/.rakeTasks
 /.idea/encodings.xml
 /.idea/inspectionProfiles/
 /.idea/misc.xml
