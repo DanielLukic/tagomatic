@@ -3,26 +3,39 @@ module Tagomatic
   module KnownFormats
 
     PREFIXES = [
-            "%g/%a/%b-%y/",
-            "%g/%a/%b %Y/",
-            "%g/%a/%y-%b/",
-            "%g/%a/%Y %b/",
-            "%g/%a/%b/",
+            "%g/%a/%b-%y",
+            "%g/%a/%b %Y",
+            "%g/%a/%y-%b",
+            "%g/%a/%Y %b",
+            "%g/%a/%b",
             ]
 
     INFIXES = [
-            "Disc%d/",
-            "cd%d/",
-            "",
+            "[disc%d]/",
+            "[disk%d]/",
+            "[cd%d]/",
+            "(disc%d)/",
+            "(disk%d)/",
+            "(cd%d)/",
+            " disc%d/",
+            " disk%d/",
+            " cd%d/",
+            "/disc%d/",
+            "/disk%d/",
+            "/cd%d/",
+            "/",
             ]
 
     SUFFIXES = [
             "%A-%B-%n-%t.mp3",
             "%B-%n-%t.mp3",
             "%A-%n-%t.mp3",
+            "%n-%A-%t.mp3",
+            "%n-%B-%t.mp3",
             "%n-%t.mp3",
             "%n.%t.mp3",
             "%n%t.mp3",
+            "%t.mp3",
             ]
 
     def self.inflate_formats
