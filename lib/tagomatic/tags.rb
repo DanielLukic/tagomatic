@@ -41,7 +41,7 @@ module Tagomatic
     FORMAT_REGEXP_TITLE = '([^\/]+)'
     FORMAT_REGEXP_WHITESPACE = '\s*'
     FORMAT_REGEXP_EXTENDED_WHITESPACE = '[\s\-_\.]*'
-    FORMAT_REGEXP_YEAR = '\s*([0-9]+)\s*'
+    FORMAT_REGEXP_YEAR = '\s*([0-9]{4})\s*'
     FORMAT_REGEXP_SURROUNDED_YEAR = '\s*[\(\[]([0-9]+)[\)\]]\s*'
 
   end
