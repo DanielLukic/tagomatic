@@ -5,7 +5,7 @@ module Tagomatic
     def process(tags_hash)
       normalized = Hash.new
       tags_hash.each do |tag, value|
-        next if value.nil?
+        next unless value
 
         split_by_spaces_and_underscores value
         strip_dashes_and_brackets
