@@ -36,8 +36,8 @@ module Tagomatic
     def normalize(value)
       value = value.gsub('_', ' ')
       parts = value.split(' ')
-      capitalized = parts.map {|p| p.capitalize}
-      capitalized.join(' ')
+      downcased = parts.map {|p| p.downcase}
+      downcased.join(' ')
     end
 
     def valid_constraints?
