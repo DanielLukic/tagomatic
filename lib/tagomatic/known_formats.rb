@@ -5,8 +5,10 @@ module Tagomatic
     PREFIXES = [
             "%g/%a/%b-%y",
             "%g/%a/%b %Y",
+            "%g/%a/%b %y",
             "%g/%a/%y-%b",
             "%g/%a/%Y %b",
+            "%g/%a/%y %b",
             "%g/%a/%b",
             ]
 
@@ -17,6 +19,9 @@ module Tagomatic
             "(disc%d)/",
             "(disk%d)/",
             "(cd%d)/",
+            "-disc%d/",
+            "-disk%d/",
+            "-cd%d/",
             " disc%d/",
             " disk%d/",
             " cd%d/",
