@@ -31,9 +31,9 @@ module Tagomatic
     FORMAT_ID_SURROUNDED_YEAR = 'Y'
 
     FORMAT_REGEXP_ARTIST = '([^\/]+)'
-    FORMAT_REGEXP_ARTIST_AGAIN = FORMAT_REGEXP_ARTIST
+    FORMAT_REGEXP_ARTIST_AGAIN = '([^-\/]+)' # do not allow dashes - 'AGAIN' is used mostly in file name part
     FORMAT_REGEXP_ALBUM = '([^\/]+)'
-    FORMAT_REGEXP_ALBUM_AGAIN = FORMAT_REGEXP_ALBUM
+    FORMAT_REGEXP_ALBUM_AGAIN = '([^-\/]+)' # do not allow dashes - 'AGAIN' is used mostly in file name part
     FORMAT_REGEXP_DISC = '\s*([0-9]+)\s*'
     FORMAT_REGEXP_GENRE = '([^\/]+)'
     FORMAT_REGEXP_IGNORE = '([^\/]+)'
