@@ -1,4 +1,5 @@
 require 'tagomatic/format_matcher'
+require 'tagomatic/format_parser'
 require 'tagomatic/info_updater'
 require 'tagomatic/local_options_matcher'
 require 'tagomatic/tag_cleaner'
@@ -12,6 +13,10 @@ module Tagomatic
 
     def create_local_options_matcher(*arguments)
       Tagomatic::LocalOptionsMatcher.new(*arguments)
+    end
+
+    def create_format_parser(*arguments)
+      Tagomatic::FormatParser.new(*arguments)
     end
 
     def create_format_matcher(*arguments)
