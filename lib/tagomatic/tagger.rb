@@ -12,12 +12,12 @@ module Tagomatic
     include Tagomatic::Tags
     include Tagomatic::KnownFormats
 
-    def initialize(options, compiler, tags_processor_chain, mp3info, info_updater_factory, logger)
+    def initialize(options, compiler, tags_processor_chain, mp3info, object_factory, logger)
       @options = options
       @compiler = compiler
       @tags_processor_chain = tags_processor_chain
       @mp3info = mp3info
-      @info_updater_factory = info_updater_factory
+      @object_factory = object_factory
       @logger = logger
     end
 
@@ -134,7 +134,7 @@ module Tagomatic
     end
 
     def apply_tags
-      updater = @info_updater_factory.create_info_updater(@mp3)
+      updater = @object_factory.create_info_updater(@mp3)
 
       discnum = @tags[FORMAT_ID_DISC]
       discnum_suffix = discnum ? " CD#{discnum}" : ''

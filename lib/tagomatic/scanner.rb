@@ -4,10 +4,10 @@ module Tagomatic
 
   class Scanner
 
-    def initialize(options, parser, local_options_matcher_factory, logger)
+    def initialize(options, parser, object_factory, logger)
       @options = options
       @parser = parser
-      @local_options_matcher_factory = local_options_matcher_factory
+      @object_factory = object_factory
       @logger = logger
       @options_stack = []
     end
@@ -64,7 +64,7 @@ module Tagomatic
 
     def read_local_options
       local_options = []
-      matcher = @local_options_matcher_factory.create_local_options_matcher
+      matcher = @object_factory.create_local_options_matcher
       lines = File.readlines(determine_local_config_file_path).map {|line| line.chomp}
       lines.each do |line|
         matcher.process!(line)

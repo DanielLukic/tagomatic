@@ -17,16 +17,13 @@ module Tagomatic
       configuration = Tagomatic::SystemConfiguration.new do
         register :options => Tagomatic::Options.new
         register :parser => Tagomatic::OptionsParser.new(get_options)
-        register :local_options_matcher_factory => Tagomatic::ObjectFactory.new
+        register :object_factory => Tagomatic::ObjectFactory.new
         register :logger => Tagomatic::Logger.new(get_options)
-        register :scanner => Tagomatic::Scanner.new(get_options, get_parser, get_local_options_matcher_factory, get_logger)
-        register :format_matcher_factory => Tagomatic::ObjectFactory.new
-        register :tags_processor_factory => Tagomatic::ObjectFactory.new
-        register :tags_processor_chain => Tagomatic::TagsProcessingChain.new(get_options, get_tags_processor_factory, get_logger)
-        register :compiler => Tagomatic::FormatCompiler.new(get_format_matcher_factory, get_logger)
+        register :scanner => Tagomatic::Scanner.new(get_options, get_parser, get_object_factory, get_logger)
+        register :tags_processor_chain => Tagomatic::TagsProcessingChain.new(get_options, get_object_factory, get_logger)
+        register :compiler => Tagomatic::FormatCompiler.new(get_object_factory, get_logger)
         register :mp3info => Tagomatic::Mp3InfoWrapper.new
-        register :info_updater_factory => Tagomatic::ObjectFactory.new
-        register :tagger => Tagomatic::Tagger.new(get_options, get_compiler, get_tags_processor_chain, get_mp3info, get_info_updater_factory, get_logger)
+        register :tagger => Tagomatic::Tagger.new(get_options, get_compiler, get_tags_processor_chain, get_mp3info, get_object_factory, get_logger)
       end
 
       parser = configuration[:parser]

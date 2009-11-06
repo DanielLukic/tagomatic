@@ -2,9 +2,9 @@ module Tagomatic
 
   class TagsProcessingChain
 
-    def initialize(options, tags_processor_factory, logger)
+    def initialize(options, object_factory, logger)
       @options = options
-      @tags_processor_factory = tags_processor_factory
+      @object_factory = object_factory
       @logger = logger
     end
 
@@ -20,10 +20,10 @@ module Tagomatic
 
     def create_processor_chain
       chain = []
-      chain << @tags_processor_factory.create_url_remover if @options[:removeurls]
-      chain << @tags_processor_factory.create_tag_cleaner if @options[:cleantags]
-      chain << @tags_processor_factory.create_tag_normalizer
-      chain << @tags_processor_factory.create_tag_setter(@options)
+      chain << @object_factory.create_url_remover if @options[:removeurls]
+      chain << @object_factory.create_tag_cleaner if @options[:cleantags]
+      chain << @object_factory.create_tag_normalizer
+      chain << @object_factory.create_tag_setter(@options)
       chain
     end
 
