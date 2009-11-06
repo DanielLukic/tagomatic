@@ -18,6 +18,13 @@ module Tagomatic
       @parser.to_s
     end
 
+    def show_available_tags
+      print_taglist_header
+      Tagomatic::Tags::AVAILABLE_TAGS.each do |tag|
+        puts format_taglist_entry(tag)
+      end
+    end
+
     protected
 
     def create_parser
@@ -90,7 +97,7 @@ module Tagomatic
         opts.separator "Informational options:"
 
         opts.on("--help-formats", "Show help on writing --format strings.") do
-          puts File.read(File.join(File.dirname($0), '..', 'lib/tagomatic/tags.rb'))
+          show_available_tags
           exit 1
         end
         opts.on("--list-formats", "List built-in formats used for guessing with --guess option.") do |list|
@@ -108,6 +115,24 @@ module Tagomatic
         end
       end
     end
+
+    def print_taglist_header
+      puts TAGLIST_HEADER
+      puts '-' * 60
+    end
+
+    def format_taglist_entry(tag)
+      tag_info = tag.name
+      tag_info << ':'
+      tag_info << ' ' * (24 - tag_info.length)
+      tag_info << '%'
+      tag_info << tag.id
+      tag_info << ' ' * 8
+      tag_info << tag.regexp
+      tag_info
+    end
+
+    TAGLIST_HEADER = "Tag Name" + (' ' * 16) + "ID" + (' ' * 8) + "Regular Expression"
 
   end
 
