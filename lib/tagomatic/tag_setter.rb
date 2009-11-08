@@ -7,13 +7,13 @@ module Tagomatic
     end
 
     def process(tags_hash)
-      tags_hash[:a] if @options[:artist]
-      tags_hash[:b] if @options[:album]
-      tags_hash[:d] if @options[:discnum]
-      tags_hash[:g] if @options[:genre]
-      tags_hash[:n] if @options[:tracknum]
-      tags_hash[:t] if @options[:title]
-      tags_hash[:y] if @options[:year]
+      tags_hash[ARTIST] if @options[:artist]
+      tags_hash[ALBUM] if @options[:album]
+      tags_hash[DISCNUM] if @options[:discnum]
+      tags_hash[GENRE] if @options[:genre]
+      tags_hash[TRACKNUM] if @options[:tracknum]
+      tags_hash[TITLE] if @options[:title]
+      tags_hash[YEAR] if @options[:year]
       tags_hash
     end
 

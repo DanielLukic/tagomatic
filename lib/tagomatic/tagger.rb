@@ -136,19 +136,19 @@ module Tagomatic
     def apply_tags
       updater = @object_factory.create_info_updater(@mp3)
 
-      discnum = @tags[FORMAT_ID_DISC]
+      discnum = @tags[DISCNUM]
       discnum_suffix = discnum ? " CD#{discnum}" : ''
 
       @tags.each do |tag, value|
         next unless tag and value
-        next if tag == FORMAT_ID_IGNORE
+        next if tag == IGNORE
 
-        updater.album = value + discnum_suffix if tag == FORMAT_ID_ALBUM
-        updater.artist = value if tag == FORMAT_ID_ARTIST
-        updater.genre_s = value if tag == FORMAT_ID_GENRE
-        updater.title = value if tag == FORMAT_ID_TITLE
-        updater.tracknum = value.to_i if tag == FORMAT_ID_TRACKNUM
-        updater.year = value if tag == FORMAT_ID_YEAR
+        updater.album = value + discnum_suffix if tag == ALBUM
+        updater.artist = value if tag == ARTIST
+        updater.genre_s = value if tag == GENRE
+        updater.title = value if tag == TITLE
+        updater.tracknum = value.to_i if tag == TRACKNUM
+        updater.year = value if tag == YEAR
       end
 
       updater.apply if updater.dirty?

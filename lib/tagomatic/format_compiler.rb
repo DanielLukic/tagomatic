@@ -13,18 +13,19 @@ module Tagomatic
     end
 
     def compile_format(format)
-      tag_mapping = []
+      mapping = []
 
       parser = @object_factory.create_format_parser(format)
       regexp = Regexp.escape(parser.prefix)
-      parser.each_tag_and_tail do |tag, tail|
-        tag_mapping << tag
-        regexp << Tagomatic::Tags::TAGS_BY_ID[tag].regexp
+      parser.each_tag_and_tail do |id, tail|
+        tag = Tagomatic::Tags::TAGS_BY_ID[id]
+        mapping << tag
+        regexp << tag.regexp
         regexp << Regexp.escape(tail)
       end
 
       compiled = Regexp.compile(regexp, Regexp::IGNORECASE)
-      @object_factory.create_format_matcher(compiled, tag_mapping, format)
+      @object_factory.create_format_matcher(compiled, mapping, format)
     rescue
       @logger.error "failed compiling #{format}", $!
       raise $!

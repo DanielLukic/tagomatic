@@ -1,16 +1,20 @@
+require 'tagomatic/tags'
+
 module Tagomatic
 
   class TagCleaner
 
+    include Tagomatic::Tags
+
     def process(tags_hash)
       @tags = tags_hash
 
-      artist = get_regexp_for('a')
-      replace_regexp_in_tag artist, 'b'
-      replace_regexp_in_tag artist, 't'
+      artist = get_regexp_for(ARTIST)
+      replace_regexp_in_tag artist, ALBUM
+      replace_regexp_in_tag artist, TITLE
 
-      album = get_regexp_for('b')
-      replace_regexp_in_tag album, 't'
+      album = get_regexp_for(ALBUM)
+      replace_regexp_in_tag album, TITLE
 
       @tags
     end
