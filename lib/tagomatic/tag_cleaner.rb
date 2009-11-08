@@ -3,21 +3,28 @@ module Tagomatic
   class TagCleaner
 
     def process(tags_hash)
-      artist = tags_hash['a']
-      artist = Regexp.compile("[ -]*#{Regexp.escape(artist)}[ -]*", Regexp::IGNORECASE) if artist
+      @tags = tags_hash
 
-      album = tags_hash['b']
-      album = album.sub(artist, '') if artist and album
-      tags_hash['b'] = album unless album.nil? or album.empty?
+      artist = get_regexp_for('a')
+      replace_regexp_in_tag artist, 'b'
+      replace_regexp_in_tag artist, 't'
 
-      album = Regexp.compile("[ -]*#{Regexp.escape(album)}[ -]*", Regexp::IGNORECASE) if album
+      album = get_regexp_for('b')
+      replace_regexp_in_tag album, 't'
 
-      title = tags_hash['t']
-      title = title.sub(artist, '') if artist and title
-      title = title.sub(album, '') if album and title
-      tags_hash['t'] = title unless title.nil? or title.empty?
+      @tags
+    end
 
-      tags_hash
+    def get_regexp_for(tag_id)
+      value = @tags[tag_id]
+      return nil unless value
+      Regexp.compile("[ -]*#{Regexp.escape(value)}[ -]*", Regexp::IGNORECASE)
+    end
+
+    def replace_regexp_in_tag(regexp, tag_id)
+      value = @tags[tag_id]
+      value = value.sub(regexp, '') if value
+      @tags[tag_id] = value unless value.nil? or value.empty?
     end
 
   end
