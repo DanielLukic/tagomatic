@@ -24,7 +24,7 @@ module Tagomatic
     define 'ARTIST_AGAIN', 'A', '([^-\/]+)' # do not allow dashes - 'AGAIN' is used mostly in file name part
     define 'ALBUM', 'b', '([^\/]+)'
     define 'ALBUM_AGAIN', 'B', '([^-\/]+)' # do not allow dashes - 'AGAIN' is used mostly in file name part
-    define 'DISC', 'd', '\s*([0-9]+)\s*'
+    define 'DISCNUM', 'd', '\s*([0-9]+)\s*'
     define 'GENRE', 'g', '([^\/]+)'
     define 'IGNORE', 'i', '([^\/]+)'
     define 'TRACKNUM', 'n', '\s*\[?([0-9]+)\]?\s*'
