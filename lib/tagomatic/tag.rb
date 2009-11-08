@@ -14,6 +14,12 @@ module Tagomatic
       @name
     end
 
+    def ==(other)
+      name == other.name && id == other.id && regexp == other.regexp
+    rescue
+      false
+    end
+
   end
 
 end
