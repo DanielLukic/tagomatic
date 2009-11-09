@@ -21,12 +21,16 @@ module Tagomatic
 
     def process(file_path, &block)
       @logger.verbose "processing #{file_path}"
-      @file_path = file_path
+      set_current_file_or_folder file_path
       if is_taggable_file?
         yield expanded_file_path
       elsif is_scannable?
         enter_scannable_folder(&block)
       end
+    end
+
+    def set_current_file_or_folder(file_path)
+      @file_path = file_path
     end
 
     def is_taggable_file?
