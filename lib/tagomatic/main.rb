@@ -19,9 +19,11 @@ module Tagomatic
         register :options => Tagomatic::Options.new
         register :file_system => Tagomatic::UnixFileSystem.new
         register :options_parser => Tagomatic::OptionsParser.new(get_options)
-        register :object_factory => Tagomatic::ObjectFactory.new
         register :logger => Tagomatic::Logger.new(get_options)
-        register :scanner => Tagomatic::Scanner.new(get_options, get_file_system, get_options_parser, get_object_factory, get_logger)
+        register :local_options_matcher => Tagomatic::LocalOptionsMatcher.new
+        register :local_options => Tagomatic::LocalOptions.new(get_options, get_options_parser, get_local_options_matcher, get_logger)
+        register :scanner => Tagomatic::Scanner.new(get_options, get_file_system, get_local_options, get_logger)
+        register :object_factory => Tagomatic::ObjectFactory.new
         register :tags_processor_chain => Tagomatic::TagsProcessingChain.new(get_options, get_object_factory, get_logger)
         register :compiler => Tagomatic::FormatCompiler.new(get_object_factory, get_logger)
         register :mp3info => Tagomatic::Mp3InfoWrapper.new

@@ -1,16 +1,14 @@
-require 'tagomatic/local_options_matcher'
+require 'tagomatic/local_options'
 
 module Tagomatic
 
   class Scanner
 
-    def initialize(options, file_system, options_parser, object_factory, logger)
+    def initialize(options, file_system, local_options, logger)
       @options = options
       @file_system = file_system
-      @options_parser = options_parser
-      @object_factory = object_factory
+      @local_options = local_options
       @logger = logger
-      @options_stack = []
     end
 
     def each_mp3(file_or_folder, &block)
@@ -56,9 +54,7 @@ module Tagomatic
     end
 
     def save_current_options
-      cloned = @options.clone
-      cloned[:formats] = @options[:formats].clone
-      @options_stack << cloned
+      @local_options.create_child_context
     end
 
     def has_local_options?
@@ -66,24 +62,16 @@ module Tagomatic
     end
 
     def determine_local_config_file_path
-      @file_system.join_path(@file_path, LOCAL_CONFIG_FILE_NAME)
+      @file_system.join_path(@file_path, Tagomatic::LocalOptions::LOCAL_OPTIONS_FILE_NAME)
     end
 
     def apply_local_options
-      local_options = read_local_options
-      @logger.verbose "applying local options: #{local_options}"
-      @options_parser.parse!(local_options)
+      option_lines = read_local_option_lines
+      @local_options.apply_local_options option_lines
     end
 
-    def read_local_options
-      local_options = []
-      matcher = @object_factory.create_local_options_matcher
-      lines = @file_system.read_lines_without_linefeed(determine_local_config_file_path)
-      lines.each do |line|
-        matcher.process!(line)
-        local_options.concat matcher.to_argv
-      end
-      local_options
+    def read_local_option_lines
+      @file_system.read_lines_without_linefeed(determine_local_config_file_path)
     end
 
     def do_scan_folder(folder_path, &block)
@@ -95,7 +83,7 @@ module Tagomatic
 
       entries.each do |entry|
         next if entry == '.' or entry == '..' or entry.starts_with?('.format=')
-        file_path = @file_system.join(folder_path, entry)
+        file_path = @file_system.join_path(folder_path, entry)
         process(file_path, &block)
       end
     end
@@ -110,10 +98,8 @@ module Tagomatic
     end
 
     def pop_local_options
-      @options.replace(@options_stack.pop)
+      @local_options.pop_child_context
     end
-
-    LOCAL_CONFIG_FILE_NAME = '.tagomatic'
 
   end
 
