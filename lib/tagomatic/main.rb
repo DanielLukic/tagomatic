@@ -37,16 +37,29 @@ module Tagomatic
     end
 
     def run!
-      options = @configuration[:options]
-      scanner = @configuration[:scanner]
-      tagger = @configuration[:tagger]
-
-      files = options[:files]
-      files.each do |file|
-        scanner.process!(nil, file) do |mp3filepath|
-          tagger.process!(mp3filepath)
-        end
+      list_of_files_and_folders.each do |file|
+        process_file_or_folder file
       end
+    end
+
+    protected
+
+    def list_of_files_and_folders
+      @configuration[:options][:files]
+    end
+
+    def process_file_or_folder(file_or_folder)
+      scanner.process!(nil, file_or_folder) do |mp3filepath|
+        tagger.process!(mp3filepath)
+      end
+    end
+
+    def scanner
+      @configuration[:scanner]
+    end
+
+    def tagger
+      @configuration[:tagger]
     end
 
   end
