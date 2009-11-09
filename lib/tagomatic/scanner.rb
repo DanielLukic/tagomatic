@@ -4,32 +4,41 @@ module Tagomatic
 
   class Scanner
 
-    def initialize(options, parser, object_factory, logger)
+    def initialize(options, file_system, options_parser, object_factory, logger)
       @options = options
-      @parser = parser
+      @file_system = file_system
+      @options_parser = options_parser
       @object_factory = object_factory
       @logger = logger
       @options_stack = []
     end
 
-    def process!(path_prefix, file_or_folder, &block)
-      @file_path = path_prefix.nil? ? file_or_folder : File.join(path_prefix, file_or_folder)
-      @logger.verbose "processing #{@file_path}"
+    def each_mp3(file_or_folder, &block)
+      process(file_or_folder, &block)
+    end
+
+    protected
+
+    def process(file_path, &block)
+      @logger.verbose "processing #{file_path}"
+      @file_path = file_path
       if is_taggable_file?
-        yield File.expand_path(@file_path)
+        yield expanded_file_path
       elsif is_scannable?
         enter_scannable_folder(&block)
       end
     end
 
-    protected
-
     def is_taggable_file?
-      File.file?(@file_path) and File.extname(@file_path).downcase == '.mp3'
+      @file_system.is_file?(@file_path) and @file_system.extract_extension(@file_path).downcase == '.mp3'
+    end
+
+    def expanded_file_path
+      @file_system.expand_path(@file_path)
     end
 
     def is_scannable?
-      @options[:recurse] and File.directory?(@file_path)
+      @options[:recurse] and @file_system.is_directory?(@file_path)
     end
 
     def enter_scannable_folder(&block)
@@ -49,23 +58,23 @@ module Tagomatic
     end
 
     def has_local_options?
-      File.exist?(determine_local_config_file_path)
+      @file_system.exist?(determine_local_config_file_path)
     end
 
     def determine_local_config_file_path
-      File.join(@file_path, LOCAL_CONFIG_FILE_NAME)
+      @file_system.join_path(@file_path, LOCAL_CONFIG_FILE_NAME)
     end
 
     def apply_local_options
       local_options = read_local_options
       @logger.verbose "applying local options: #{local_options}"
-      @parser.parse!(local_options)
+      @options_parser.parse!(local_options)
     end
 
     def read_local_options
       local_options = []
       matcher = @object_factory.create_local_options_matcher
-      lines = File.readlines(determine_local_config_file_path).map {|line| line.chomp}
+      lines = @file_system.read_lines_without_linefeed(determine_local_config_file_path)
       lines.each do |line|
         matcher.process!(line)
         local_options.concat matcher.to_argv
@@ -75,14 +84,15 @@ module Tagomatic
 
     def do_scan_folder(folder_path, &block)
       @logger.verbose "scanning #{folder_path}"
-      entries = Dir.entries(folder_path).sort
+      entries = @file_system.list_folder_sorted(folder_path)
 
       local_formats = entries.select { |entry| entry.starts_with?('.format=') }
       apply_local_formats(local_formats)
 
       entries.each do |entry|
         next if entry == '.' or entry == '..' or entry.starts_with?('.format=')
-        process!(folder_path, entry, &block)
+        file_path = @file_system.join(folder_path, entry)
+        process(file_path, &block)
       end
     end
 

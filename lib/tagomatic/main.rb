@@ -8,6 +8,7 @@ require 'tagomatic/scanner'
 require 'tagomatic/system_configuration'
 require 'tagomatic/tagger'
 require 'tagomatic/tags_processing_chain'
+require 'tagomatic/unix_file_system'
 
 module Tagomatic
 
@@ -16,17 +17,18 @@ module Tagomatic
     def self.run!(*arguments)
       configuration = Tagomatic::SystemConfiguration.new do
         register :options => Tagomatic::Options.new
-        register :parser => Tagomatic::OptionsParser.new(get_options)
+        register :file_system => Tagomatic::UnixFileSystem.new
+        register :options_parser => Tagomatic::OptionsParser.new(get_options)
         register :object_factory => Tagomatic::ObjectFactory.new
         register :logger => Tagomatic::Logger.new(get_options)
-        register :scanner => Tagomatic::Scanner.new(get_options, get_parser, get_object_factory, get_logger)
+        register :scanner => Tagomatic::Scanner.new(get_options, get_file_system, get_options_parser, get_object_factory, get_logger)
         register :tags_processor_chain => Tagomatic::TagsProcessingChain.new(get_options, get_object_factory, get_logger)
         register :compiler => Tagomatic::FormatCompiler.new(get_object_factory, get_logger)
         register :mp3info => Tagomatic::Mp3InfoWrapper.new
         register :tagger => Tagomatic::Tagger.new(get_options, get_compiler, get_tags_processor_chain, get_mp3info, get_object_factory, get_logger)
       end
 
-      parser = configuration[:parser]
+      parser = configuration.get_options_parser
       parser.parse!(arguments)
 
       new(configuration).run!
@@ -49,7 +51,7 @@ module Tagomatic
     end
 
     def process_file_or_folder(file_or_folder)
-      scanner.process!(nil, file_or_folder) do |mp3filepath|
+      scanner.each_mp3(file_or_folder) do |mp3filepath|
         tagger.process!(mp3filepath)
       end
     end
