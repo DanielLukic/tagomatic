@@ -38,9 +38,6 @@ module Tagomatic
 
     def run!
       options = @configuration[:options]
-
-      show_usage_and_exit if options[:files].empty?
-
       scanner = @configuration[:scanner]
       tagger = @configuration[:tagger]
 
@@ -50,11 +47,6 @@ module Tagomatic
           tagger.process!(mp3filepath)
         end
       end
-    end
-
-    def show_usage_and_exit
-      puts @configuration[:parser].show_help
-      exit 1
     end
 
   end

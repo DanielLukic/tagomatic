@@ -12,17 +12,7 @@ module Tagomatic
     def parse!(arguments)
       @parser.parse!(arguments)
       @options[:files].concat(arguments)
-    end
-
-    def show_help
-      @parser.to_s
-    end
-
-    def show_available_tags
-      print_taglist_header
-      Tagomatic::Tags::AVAILABLE_TAGS.each do |tag|
-        puts format_taglist_entry(tag)
-      end
+      show_usage_and_exit if @options[:files].empty?
     end
 
     protected
@@ -97,23 +87,42 @@ module Tagomatic
         opts.separator "Informational options:"
 
         opts.on("--help-formats", "Show help on writing --format strings.") do
-          show_available_tags
-          exit 1
+          show_available_tags_and_exit
         end
         opts.on("--list-formats", "List built-in formats used for guessing with --guess option.") do |list|
-          puts Tagomatic::Tagger::KNOWN_FORMATS
-          exit 1
+          show_known_formats_and_exit
         end
         opts.on("--version", "Show version information.") do |version|
-          puts File.read(File.join(File.dirname($0), '..', 'VERSION'))
-          exit 1
+          show_version_info_and_exit
         end
 
         opts.on_tail("--help", "Show this message") do
-          puts opts
-          exit 1
+          show_usage_and_exit
         end
       end
+    end
+
+    def show_usage_and_exit
+      puts @parser.to_s
+      exit 1
+    end
+
+    def show_available_tags_and_exit
+      print_taglist_header
+      Tagomatic::Tags::AVAILABLE_TAGS.each do |tag|
+        puts format_taglist_entry(tag)
+      end
+      exit 1
+    end
+
+    def show_known_formats_and_exit()
+      puts Tagomatic::Tagger::KNOWN_FORMATS
+      exit 1
+    end
+
+    def show_version_info_and_exit()
+      puts File.read(File.join(File.dirname($0), '..', 'VERSION'))
+      exit 1
     end
 
     def print_taglist_header
