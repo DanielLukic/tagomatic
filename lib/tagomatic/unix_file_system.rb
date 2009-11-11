@@ -2,6 +2,10 @@ module Tagomatic
 
   class UnixFileSystem
 
+    def base_name(file_path)
+      File.basename(file_path)
+    end
+
     def expand_path(file_path)
       File.expand_path(file_path)
     end
@@ -30,7 +34,7 @@ module Tagomatic
       File.readlines(file_path).map {|line| line.chomp}
     end
 
-    def list_folder_sorted(folder_path)
+    def list_folder_entries(folder_path)
       Dir.entries(folder_path).sort
     end
 

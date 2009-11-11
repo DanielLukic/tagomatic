@@ -1,6 +1,7 @@
 require 'tagomatic/local_options'
-require 'tagomatic/logger'
+require 'tagomatic/mp3_file_path_yielder'
 require 'tagomatic/scanner'
+require 'tagomatic/scanner_chain'
 require 'tagomatic/unix_file_system'
 
 describe "Scanner" do
@@ -8,9 +9,9 @@ describe "Scanner" do
   before do
     @options = {}
     @file_system = Tagomatic::UnixFileSystem.new
-    @logger = mock(Tagomatic::Logger, :verbose => nil)
-    @local_options = mock(Tagomatic::LocalOptions, :create_child_context => nil, :pop_child_context => nil)
-    @scanner = Tagomatic::Scanner.new(@options, @file_system, @local_options, @logger)
+    @scanner_chain = Tagomatic::ScannerChain.new
+    @scanner_chain.append Tagomatic::Mp3FilePathYielder.new(@file_system)
+    @scanner = Tagomatic::Scanner.new(@options, @file_system, @scanner_chain)
     @result = []
   end
 
