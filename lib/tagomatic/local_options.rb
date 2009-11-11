@@ -14,7 +14,7 @@ module Tagomatic
 
     def create_child_context
       cloned = @options.clone
-      cloned[:formats] = @options[:formats].clone
+      cloned[:formats] = @options[:formats].clone if @options[:formats]
       @options_stack << cloned
     end
 
