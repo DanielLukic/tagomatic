@@ -1,3 +1,4 @@
+require 'monkey/string'
 require 'tagomatic/local_options'
 
 module Tagomatic
@@ -94,6 +95,7 @@ module Tagomatic
         format = file_name.sub('.format=', '')
         format.gsub!('|', '/')
       end
+      @options[:formats] ||= []
       @options[:formats].concat(local_formats)
     end
 
