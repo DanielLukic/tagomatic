@@ -1,20 +1,5 @@
-require 'tagomatic/format_compiler'
-require 'tagomatic/object_factory'
-require 'tagomatic/local_formats_loader'
-require 'tagomatic/local_options'
-require 'tagomatic/local_options_loader'
-require 'tagomatic/logger'
-require 'tagomatic/mp3info_wrapper'
-require 'tagomatic/mp3_file_path_yielder'
-require 'tagomatic/options'
-require 'tagomatic/options_parser'
-require 'tagomatic/scanner'
-require 'tagomatic/scanner_action_logger'
-require 'tagomatic/scanner_chain'
-require 'tagomatic/system_configuration'
-require 'tagomatic/tagger'
-require 'tagomatic/tags_processing_chain'
-require 'tagomatic/unix_file_system'
+require 'monkey/kernel'
+import 'tagomatic/*.rb'
 
 module Tagomatic
 
