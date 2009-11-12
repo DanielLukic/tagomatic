@@ -45,8 +45,9 @@ module Tagomatic
     def guess_tags_using(formats)
       formats.each do |format|
         format_matcher = @format_compiler.compile_format(format)
-        matched_tags = format_matcher.match(@context.file_path)
-        return matched_tags unless matched_tags.nil? or matched_tags.empty?
+        format_matcher.reset
+        format_matcher.match(@context.file_path)
+        return format_matcher.tags if format_matcher.valid_match?
       end
       nil
     end

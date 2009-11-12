@@ -1,6 +1,8 @@
 require 'monkey/id3v2'
 require 'monkey/kernel'
 import 'tagomatic/*.rb'
+import 'tagomatic/scanner_chain/*.rb'
+import 'tagomatic/tagger_chain/*.rb'
 
 module Tagomatic
 
