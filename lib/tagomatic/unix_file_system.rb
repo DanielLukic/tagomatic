@@ -2,6 +2,10 @@ module Tagomatic
 
   class UnixFileSystem
 
+    def directory_name(file_path)
+      File.dirname(file_path)
+    end
+
     def base_name(file_path)
       File.basename(file_path)
     end

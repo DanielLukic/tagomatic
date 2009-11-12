@@ -31,7 +31,7 @@ module Tagomatic
         scanner_chain.append Tagomatic::Mp3FilePathYielder.new(get_file_system)
 
         tagger_chain = get_tagger_chain
-        tagger_chain.append Tagomatic::UnderscoreReplacer.new(get_options, get_file_system)
+        tagger_chain.append Tagomatic::UnderscoreReplacer.new(get_options, get_file_system, get_logger)
         tagger_chain.append Tagomatic::FormatsApplier.new(get_options, get_format_compiler, get_file_system)
         tagger_chain.append Tagomatic::UrlRemover.new(get_options)
         tagger_chain.append Tagomatic::TagCleaner.new(get_options)
