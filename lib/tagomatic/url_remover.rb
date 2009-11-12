@@ -6,20 +6,18 @@ module Tagomatic
       @options = options
     end
 
-    def process(tags_hash)
-      return tags_hash unless @options[:removeurls]
+    def process(tagger_context)
+      return unless @options[:removeurls]
 
-      result = {}
-
-      tags_hash.each do |tag,value|
+      tagger_context.tags.each do |tag,value|
         next unless value
-        result[tag] = value.gsub(URL_REGEXP, '').gsub(/ by [a-zA-Z0-9]+[\w ]/, '')
+        value.gsub!(URL_REGEXP, '')
+        value.gsub!(BY_REGEXP, '')
       end
-
-      result
     end
 
     URL_REGEXP = Regexp.compile("www\.[^\.]+\.[a-z]{2,4}", Regexp::IGNORECASE)
+    BY_REGEXP = Regexp.compile("\s+by\s+[a-zA-Z0-9]+\s?", Regexp::IGNORECASE)
 
   end
 

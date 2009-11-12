@@ -10,10 +10,10 @@ module Tagomatic
       @options = options
     end
 
-    def process(tags_hash)
-      return tags_hash unless @options[:cleantags]
+    def process(tagger_context)
+      return unless @options[:cleantags]
 
-      @tags = tags_hash
+      @tags = tagger_context.tags
 
       artist = get_regexp_for(ARTIST)
       replace_regexp_in_tag artist, ALBUM
@@ -21,8 +21,6 @@ module Tagomatic
 
       album = get_regexp_for(ALBUM)
       replace_regexp_in_tag album, TITLE
-
-      @tags
     end
 
     def get_regexp_for(tag_id)

@@ -2,7 +2,7 @@ module Tagomatic
 
   class InfoUpdater
 
-    def initialize(mp3info)
+    def reset_to(mp3info)
       @info = mp3info
       @updates = {}
     end

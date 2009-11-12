@@ -1,3 +1,4 @@
+require 'monkey/id3v2'
 require 'monkey/kernel'
 import 'tagomatic/*.rb'
 
@@ -22,7 +23,8 @@ module Tagomatic
 
         register :object_factory => Tagomatic::ObjectFactory.new
         register :format_compiler => Tagomatic::FormatCompiler.new(get_object_factory, get_logger)
-        register :mp3info => Tagomatic::Mp3InfoWrapper.new
+        register :mp3info_wrapper => Tagomatic::Mp3InfoWrapper.new
+        register :info_updater => Tagomatic::InfoUpdater.new
 
         scanner_chain = get_scanner_chain
         scanner_chain.append Tagomatic::ScannerActionLogger.new(get_logger)
@@ -37,10 +39,12 @@ module Tagomatic
         tagger_chain.append Tagomatic::TagCleaner.new(get_options)
         tagger_chain.append Tagomatic::TagNormalizer.new
         tagger_chain.append Tagomatic::TagSetter.new(get_options)
-        tagger_chain.append Tagomatic::FileTagsRemover.new(get_options, get_file_system, get_mp3info)
+        tagger_chain.append Tagomatic::Mp3FileOpener.new(get_mp3info_wrapper)
+        tagger_chain.append Tagomatic::FileTagsRemover.new(get_options)
         tagger_chain.append Tagomatic::Mp3InfoViewer.new(get_options)
-        tagger_chain.append Tagomatic::FileUpdater.new(get_file_system, get_mp3info)
+        tagger_chain.append Tagomatic::FileTagsUpdater.new(get_info_updater)
         tagger_chain.append Tagomatic::TagsViewer.new(get_options)
+        tagger_chain.append Tagomatic::Mp3FileCloser.new
       end
 
       parser = configuration.get_options_parser

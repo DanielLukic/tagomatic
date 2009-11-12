@@ -8,11 +8,11 @@ module Tagomatic
       @logger = logger
     end
 
-    def process(context)
-      @context = context
+    def process(tagger_context)
+      @context = tagger_context
       return unless cleaning_required?
       log_rename_info
-      try_renaming_file
+      rename_file
     end
 
     protected
@@ -34,14 +34,6 @@ module Tagomatic
       @logger.verbose "renaming #{get_original_file_name} to #{get_clean_file_name}"
     end
 
-    def try_renaming_file
-      begin
-        rename_file
-      rescue Exception
-        handle_rename_file_failure
-      end
-    end
-
     def rename_file
       source_path = get_source_path
       target_path = get_target_path
@@ -54,16 +46,11 @@ module Tagomatic
     end
 
     def get_target_path
-      @file_system.join(get_folder_path, get_clean_file_name)
+      @file_system.join_path(get_folder_path, get_clean_file_name)
     end
 
     def get_folder_path
       @file_system.directory_name(get_source_path)
-    end
-
-    def handle_rename_file_failure
-      @context.show_error "rename operation failed", $!
-      @context.file_path = get_source_path
     end
 
   end

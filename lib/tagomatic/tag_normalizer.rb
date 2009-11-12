@@ -2,9 +2,9 @@ module Tagomatic
 
   class TagNormalizer
 
-    def process(tags_hash)
+    def process(tagger_context)
       normalized = Hash.new
-      tags_hash.each do |tag, value|
+      tagger_context.tags.each do |tag, value|
         next unless value
 
         split_by_spaces_and_underscores value
@@ -14,7 +14,7 @@ module Tagomatic
 
         normalized[tag] = get_resulting_value
       end
-      normalized
+      tagger_context.tags = normalized
     end
 
     def split_by_spaces_and_underscores(value)
