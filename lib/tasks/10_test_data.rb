@@ -1,4 +1,5 @@
 require 'monkey/string'
+require 'tagomatic/unix_file_system'
 
 namespace :test do
 
@@ -34,7 +35,9 @@ namespace :test do
   end
 
   def create_mp3_fake_file(file_path)
-    system %Q[cp test/data/mp3_template_file "#{file_path}"]
+    file_system = Tagomatic::UnixFileSystem.new
+    quoted_file_path = file_system.quoted_file_path(file_path)
+    system %Q[cp test/data/mp3_template_file #{quoted_file_path}]
   end
 
 end
