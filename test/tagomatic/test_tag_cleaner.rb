@@ -7,7 +7,7 @@ class TestTagCleaner < Test::Unit::TestCase
   include Tagomatic::Tags
   context "A TagCleaner" do
     setup do
-      @tag_cleaner = Tagomatic::TagCleaner.new
+      @tag_cleaner = Tagomatic::TagCleaner.new :cleantags => true
       @test_tags = {ARTIST => 'artist', ALBUM => 'artist - album', TITLE => 'artist - album - 01 - title'}
     end
 

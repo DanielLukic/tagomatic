@@ -5,7 +5,7 @@ require 'tagomatic/url_remover'
 class TestUrlRemover < Test::Unit::TestCase
   context "A UrlRemover" do
     setup do
-      @url_remover = Tagomatic::UrlRemover.new
+      @url_remover = Tagomatic::UrlRemover.new :removeurls => true
     end
 
     should "remove URLs from tag values" do
