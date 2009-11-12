@@ -1,10 +1,15 @@
 require 'tagomatic/tags'
 
+require 'tagomatic/util/again_tags_validator'
+require 'tagomatic/util/tags_hash_creator'
+
 module Tagomatic
 
   class FormatMatcher
 
     include Tagomatic::Tags
+
+    attr_reader :tags
 
     def initialize(compiled_regexp, tag_mapping, original_format)
       @regexp = compiled_regexp
@@ -12,19 +17,26 @@ module Tagomatic
       @format = original_format
     end
 
+    def reset
+      @matchdata = nil
+      @tags = nil
+      @valid = false
+    end
+
     def match(file_path)
-      matchdata = @regexp.match(file_path)
-      return nil unless matchdata
-      return nil unless matchdata.captures.size == @mapping.size
-      @tags = {}
-      0.upto(@mapping.size - 1) do |index|
-        value = matchdata.captures[index]
-        value = normalize(value) if value
-        @tags[@mapping[index]] = value
-      end
-      @tags[YEAR] ||= @tags[SURROUNDED_YEAR]
-      return nil unless valid_constraints?
-      @tags
+      apply_regex_to file_path
+      return unless matched?
+      create_tags_hash
+      set_year_from_surrounded_year_if_possible unless year_set?
+      validate_constraints
+    end
+
+    def matched?
+      @matchdata and @matchdata.captures and @matchdata.captures.size == @mapping.size
+    end
+
+    def valid_match?
+      matched? and valid?
     end
 
     def to_s
@@ -33,25 +45,31 @@ module Tagomatic
 
     protected
 
-    def normalize(value)
-      value = value.gsub('_', ' ')
-      parts = value.split(' ')
-      downcased = parts.map {|p| p.downcase}
-      downcased.join(' ')
+    def apply_regex_to(file_path)
+      @matchdata = @regexp.match(file_path)
     end
 
-    def valid_constraints?
-      valid_double_match_with_same_value?(FORMAT_ID_ARTIST, FORMAT_ID_ARTIST_AGAIN) &&
-      valid_double_match_with_same_value?(FORMAT_ID_ALBUM, FORMAT_ID_ALBUM_AGAIN)
+    def create_tags_hash
+      creator = Tagomatic::Util::TagsHashCreator.new(@mapping, @matchdata)
+      @tags = creator.create_tags_hash
     end
 
-    def valid_double_match_with_same_value?(base_tag, again_tag)
-      return true unless @tags.has_key?(again_tag)
-      return false unless @tags.has_key?(base_tag)
-      return @tags[base_tag].casecmp(@tags[again_tag]) == STRING_CASECMP_IS_EQUAL
+    def set_year_from_surrounded_year_if_possible
+      @tags[YEAR] ||= @tags[SURROUNDED_YEAR]
     end
 
-    STRING_CASECMP_IS_EQUAL = 0
+    def year_set?
+      @tags[YEAR]
+    end
+
+    def validate_constraints
+      validator = Tagomatic::Util::AgainTagsValidator.new(@tags)
+      @valid = validator.valid_constraints?
+    end
+
+    def valid?
+      @valid
+    end
 
   end
 
