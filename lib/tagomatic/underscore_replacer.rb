@@ -9,6 +9,7 @@ module Tagomatic
     end
 
     def process(tagger_context)
+      return unless @options[:replaceunderscores]
       @context = tagger_context
       return unless cleaning_required?
       log_rename_info

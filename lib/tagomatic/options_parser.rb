@@ -56,13 +56,10 @@ module Tagomatic
         opts.separator " "
         
         opts.on("-c", "--[no-]cleantags", "Clean up tags by removing artist and album from title for example.") do |cleantags|
-          @options[:cleantags]= cleantags
-        end
-        opts.on("-k", "--[no-]cleartags", "Clear any existing v1 and v2 tags. This is an expensive and destructive operation.") do |cleartags|
-          @options[:cleartags]= cleartags
+          @options[:cleantags] = cleantags
         end
         opts.on("-e", "--[no-]errorstops", "Stop execution if an error occurs.") do |errorstops|
-          @options[:errorstops]= errorstops
+          @options[:errorstops] = errorstops
         end
         opts.on("-s", "--[no-]guess", "Use format guessing. Used only if no --format matched.") do |guess|
           @options[:guess] = guess
@@ -70,14 +67,17 @@ module Tagomatic
         opts.on("-r", "--[no-]recurse", "Scan for files recursively.") do |recurse|
           @options[:recurse] = recurse
         end
+        opts.on("-k", "--[no-]removetags", "Remove any existing v1 and v2 tags. This is an expensive and destructive operation.") do |removetags|
+          @options[:removetags] = removetags
+        end
         opts.on(      "--[no-]removeurls", "Remove URLs from file names.") do |removeurls|
           @options[:removeurls] = removeurls
         end
+        opts.on("-u", "--[no-]replaceunderscores", "Replace underscores with spaces before processing a file name.") do |replaceunderscores|
+          @options[:replaceunderscores] = replaceunderscores
+        end
         opts.on("-w", "--[no-]showtags", "Show the resulting tags.") do |showtags|
           @options[:showtags] = showtags
-        end
-        opts.on("-u", "--[no-]underscores", "Replace underscores with spaces before processing a file name.") do |underscores|
-          @options[:underscores] = underscores
         end
         opts.on("-v", "--[no-]verbose", "Print verbose messages about processing operations.") do |verbose|
           @options[:verbose] = verbose
