@@ -20,6 +20,10 @@ module Tagomatic
       exit 10 if @options[:errorstops]
     end
 
+    def has_tags?
+      not (self.tags.nil? or self.tags.empty?)
+    end
+
   end
 
 end
