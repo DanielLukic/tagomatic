@@ -11,10 +11,6 @@ module Tagomatic
 
   class ObjectFactory
 
-    def create_local_options_matcher(*arguments)
-      Tagomatic::LocalOptionsMatcher.new(*arguments)
-    end
-
     def create_format_parser(*arguments)
       Tagomatic::FormatParser.new(*arguments)
     end
