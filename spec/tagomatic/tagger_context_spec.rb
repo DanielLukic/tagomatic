@@ -1,6 +1,6 @@
 require 'tagomatic/tagger_context'
 
-describe "TaggerContext" do
+describe Tagomatic::TaggerContext do
 
   before do
     @options = mock('Tagomatic::Options')

@@ -1,6 +1,6 @@
 require 'tagomatic/unix_file_system'
 
-describe "UnixFileSystem" do
+describe Tagomatic::UnixFileSystem do
 
   before do
     @file_system = Tagomatic::UnixFileSystem.new

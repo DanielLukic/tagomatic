@@ -1,7 +1,6 @@
-require 'tagomatic/tags'
-
 require 'tagomatic/util/again_tags_validator'
 
+require 'tagomatic/tags'
 include Tagomatic::Tags
 
 describe "AgainTagsValidator" do

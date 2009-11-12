@@ -9,7 +9,7 @@ module Tagomatic
     def process(tagger_context)
       return unless @options[:removeurls]
 
-      tagger_context.tags.each do |tag,value|
+      tagger_context.tags.each do |tag, value|
         next unless value
         value.gsub!(URL_REGEXP, '')
         value.gsub!(BY_REGEXP, '')

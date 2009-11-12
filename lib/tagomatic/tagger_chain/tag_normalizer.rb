@@ -14,7 +14,7 @@ module Tagomatic
 
         normalized[tag] = get_resulting_value
       end
-      tagger_context.tags = normalized
+      tagger_context.tags.replace normalized
     end
 
     def split_by_spaces_and_underscores(value)

@@ -1,10 +1,11 @@
 require 'tagomatic/local_options'
-require 'tagomatic/mp3_file_path_yielder'
 require 'tagomatic/scanner'
 require 'tagomatic/scanner_chain'
 require 'tagomatic/unix_file_system'
 
-describe "Scanner" do
+require 'tagomatic/scanner_chain/mp3_file_path_yielder'
+
+describe Tagomatic::Scanner do
 
   before do
     @options = {}
