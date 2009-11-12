@@ -27,22 +27,6 @@ module Tagomatic
       Tagomatic::InfoUpdater.new(*arguments)
     end
 
-    def create_url_remover(*arguments)
-      Tagomatic::UrlRemover.new(*arguments)
-    end
-
-    def create_tag_cleaner(*arguments)
-      Tagomatic::TagCleaner.new(*arguments)
-    end
-
-    def create_tag_normalizer(*arguments)
-      Tagomatic::TagNormalizer.new(*arguments)
-    end
-
-    def create_tag_setter(*arguments)
-      Tagomatic::TagSetter.new(*arguments)
-    end
-
   end
 
 end

@@ -6,7 +6,13 @@ module Tagomatic
 
     include Tagomatic::Tags
 
+    def initialize(options)
+      @options = options
+    end
+
     def process(tags_hash)
+      return tags_hash unless @options[:cleantags]
+
       @tags = tags_hash
 
       artist = get_regexp_for(ARTIST)

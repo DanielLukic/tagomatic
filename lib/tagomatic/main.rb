@@ -16,7 +16,7 @@ module Tagomatic
         register :local_options => Tagomatic::LocalOptions.new(get_options, get_options_parser, get_local_options_matcher, get_logger)
         register :scanner_chain => Tagomatic::ScannerChain.new
         register :scanner => Tagomatic::Scanner.new(get_options, get_file_system, get_scanner_chain)
-        register :tags_processor_chain => Tagomatic::TagsProcessingChain.new(get_options, get_object_factory, get_logger)
+        register :tags_processor_chain => Tagomatic::TagsProcessingChain.new
         register :compiler => Tagomatic::FormatCompiler.new(get_object_factory, get_logger)
         register :mp3info => Tagomatic::Mp3InfoWrapper.new
         register :tagger => Tagomatic::Tagger.new(get_options, get_compiler, get_tags_processor_chain, get_mp3info, get_object_factory, get_logger)
@@ -26,6 +26,12 @@ module Tagomatic
         scanner_chain.append Tagomatic::LocalOptionsLoader.new(get_local_options, get_file_system)
         scanner_chain.append Tagomatic::LocalFormatsLoader.new(get_options, get_file_system, get_logger)
         scanner_chain.append Tagomatic::Mp3FilePathYielder.new(get_file_system)
+
+        tags_processor_chain = get_tags_processor_chain
+        tags_processor_chain.append Tagomatic::UrlRemover.new(get_options)
+        tags_processor_chain.append Tagomatic::TagCleaner.new(get_options)
+        tags_processor_chain.append Tagomatic::TagNormalizer.new
+        tags_processor_chain.append Tagomatic::TagSetter.new(get_options)
       end
 
       parser = configuration.get_options_parser
