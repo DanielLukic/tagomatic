@@ -1,4 +1,3 @@
-require 'tagomatic/format_parser'
 require 'tagomatic/tags'
 
 module Tagomatic
