@@ -83,7 +83,7 @@ module Tagomatic
       raise 'NYI'
     end
 
-    QUOTED_CHARACTERS = %q['`"$&!- ]
+    QUOTED_CHARACTERS = "'`\"$&!- []()"
     QUOTE_REGEXP = Regexp.compile "([#{Regexp.escape(QUOTED_CHARACTERS)}])"
 
   end
