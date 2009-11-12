@@ -12,8 +12,8 @@ module Tagomatic
     end
 
     def exception(exception)
-      puts exception.to_s
-      puts exception.backtrace
+      verbose exception.to_s
+      verbose exception.backtrace
     end
 
     def verbose(message)
