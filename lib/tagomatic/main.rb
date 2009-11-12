@@ -12,7 +12,7 @@ module Tagomatic
         register :logger => Tagomatic::Logger.new(get_options)
         register :scanner_chain => Tagomatic::ScannerChain.new
         register :scanner => Tagomatic::Scanner.new(get_options, get_file_system, get_scanner_chain)
-        register :tagger_context => Tagomatic::TaggerContext.new
+        register :tagger_context => Tagomatic::TaggerContext.new(get_options, get_logger)
         register :tagger_chain => Tagomatic::TaggerChain.new
         register :tagger => Tagomatic::Tagger.new(get_tagger_context, get_tagger_chain, get_logger)
 

@@ -4,10 +4,20 @@ module Tagomatic
 
   class TaggerContext < OpenStruct
 
+    def initialize(options, logger)
+      super()
+      @options = options
+      @logger = logger
+    end
+
     def reset_to(file_path)
-      self.input_file_path = file_path
-      self.output_file_path = file_path
+      self.file_path = file_path
       self.tags = Hash.new
+    end
+
+    def show_error(message, optional_exception = nil)
+      @logger.error(message, optional_exception)
+      exit 10 if @options[:errorstops]
     end
 
   end
