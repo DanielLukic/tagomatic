@@ -73,14 +73,14 @@ module Tagomatic
         opts.on(      "--[no-]removeurls", "Remove URLs from file names.") do |removeurls|
           @options[:removeurls] = removeurls
         end
+        opts.on("-w", "--[no-]showtags", "Show the resulting tags.") do |showtags|
+          @options[:showtags] = showtags
+        end
         opts.on("-u", "--[no-]underscores", "Replace underscores with spaces before processing a file name.") do |underscores|
           @options[:underscores] = underscores
         end
         opts.on("-v", "--[no-]verbose", "Print verbose messages about processing operations.") do |verbose|
           @options[:verbose] = verbose
-        end
-        opts.on("-w", "--[no-]showtags", "Show the resulting tags.") do |showtags|
-          @options[:showtags] = showtags
         end
 
         opts.separator " "
