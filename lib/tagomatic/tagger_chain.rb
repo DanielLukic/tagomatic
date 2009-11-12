@@ -12,6 +12,8 @@ module Tagomatic
 
     def process(tagger_context)
       @chain.each { |component| component.process tagger_context }
+    rescue
+      tagger_context.show_error "tagging failed: #{$!.message}", $!
     end
 
   end
