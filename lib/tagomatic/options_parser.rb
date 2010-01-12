@@ -53,6 +53,10 @@ module Tagomatic
           @options[:formats] << format.gsub('|', '/')
         end
 
+        opts.on(      "--renameformat [FORMAT]", "Rename processed files using this file name format.") do |format|
+          @options[:renameformat] = format
+        end
+
         opts.separator " "
         
         opts.on("-c", "--[no-]cleantags", "Clean up tags by removing artist and album from title for example.") do |cleantags|

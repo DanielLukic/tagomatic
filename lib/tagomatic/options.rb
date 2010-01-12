@@ -14,6 +14,7 @@ module Tagomatic
       self[:recurse] = false
       self[:removetags] = false
       self[:removeurls] = false
+      self[:renameformat] = nil
       self[:replaceunderscores] = false
       self[:showtags] = false
       self[:verbose] = false

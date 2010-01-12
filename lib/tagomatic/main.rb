@@ -47,6 +47,7 @@ module Tagomatic
         tagger_chain.append Tagomatic::FileTagsUpdater.new(get_info_updater)
         tagger_chain.append Tagomatic::TagsViewer.new(get_options)
         tagger_chain.append Tagomatic::Mp3FileCloser.new
+        tagger_chain.append Tagomatic::FileRenamer.new(get_options)
       end
 
       parser = configuration.get_options_parser
